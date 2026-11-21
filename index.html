@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>DermaBlaster — Pediatric Skin &amp; Bones Quiz Shooter</title>
+<style>
+  :root{
+    --bg:#070b16; --cyan:#38e8ff; --pink:#ff4d9d;
+    --green:#3cff8c; --red:#ff4a5e; --amber:#ffc24d;
+  }
+  *{box-sizing:border-box}
+  html,body{
+    margin:0;height:100%;overflow:hidden;background:var(--bg);
+    font-family:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:#e8f3ff;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;
+  }
+  #game{position:fixed;inset:0;display:block;cursor:crosshair;z-index:1;touch-action:none}
+
+  /* ---------- HUD ---------- */
+  #hud{
+    position:fixed;top:0;left:0;right:0;height:66px;z-index:10;
+    display:flex;align-items:center;gap:16px;padding:8px 18px;
+    pointer-events:none;
+    background:linear-gradient(#050a14ee,#050a1400);
+  }
+  .hud-block{display:flex;flex-direction:column;gap:2px}
+  #waveName{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);font-weight:800;opacity:.9}
+  #qCount{font-size:11px;letter-spacing:.1em;color:#8fb3cc;font-weight:700}
+  .hud-center{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+  #timerBar{width:min(520px,46vw);height:12px;border-radius:8px;background:#0c1a2c;border:1px solid #1d3a55;overflow:hidden;box-shadow:inset 0 0 12px #000}
+  #timerFill{height:100%;width:100%;background:linear-gradient(90deg,#3cff8c,#38e8ff);transition:background .2s}
+  #timerLbl{font-size:10px;letter-spacing:.22em;color:#6d90ab;font-weight:700}
+  .hud-right{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+  #scoreBox{font-size:22px;font-weight:900;color:#fff;text-shadow:0 0 18px rgba(56,232,255,.6);font-variant-numeric:tabular-nums}
+  #comboBox{font-size:11px;font-weight:800;color:var(--amber);letter-spacing:.08em;height:14px}
+  #livesBox{font-size:14px;letter-spacing:2px;color:var(--red);text-shadow:0 0 12px rgba(255,74,94,.8)}
+
+  /* ---------- Question banner ---------- */
+  #qBanner{
+    position:fixed;top:70px;left:50%;transform:translateX(-50%);
+    width:min(980px,92vw);z-index:9;pointer-events:none;
+    text-align:center;font-size:18px;font-weight:700;line-height:1.38;
+    padding:13px 22px;border-radius:14px;
+    background:rgba(9,18,34,.85);border:1px solid rgba(56,232,255,.28);
+    box-shadow:0 10px 34px rgba(0,0,0,.6),inset 0 0 30px rgba(56,232,255,.05);
+    backdrop-filter:blur(6px);
+    opacity:0;transition:opacity .18s;
+  }
+  #qBanner.on{opacity:1}
+
+  /* ---------- Feedback ---------- */
+  #feedback{
+    position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);
+    width:min(900px,94vw);z-index:12;pointer-events:none;
+    padding:15px 20px;border-radius:16px;opacity:0;transition:.22s;
+    background:rgba(8,16,30,.94);backdrop-filter:blur(8px);
+    box-shadow:0 18px 50px rgba(0,0,0,.7);
+  }
+  #feedback.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  #feedback.ok{border:1px solid rgba(60,255,140,.55);box-shadow:0 0 40px rgba(60,255,140,.18),0 18px 50px #000}
+  #feedback.bad{border:1px solid rgba(255,74,94,.55);box-shadow:0 0 40px rgba(255,74,94,.18),0 18px 50px #000}
+  .fb-head{font-size:15px;font-weight:900;letter-spacing:.14em;margin-bottom:7px}
+  #feedback.ok .fb-head{color:var(--green)}
+  #feedback.bad .fb-head{color:var(--red)}
+  .fb-ans{font-size:15px;color:#fff;margin-bottom:5px}
+  .fb-ans b{color:var(--cyan)}
+  .fb-exp{font-size:13.5px;color:#9fbdd4;line-height:1.5}
+
+  /* ---------- Overlay ---------- */
+  #overlay{
+    position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;
+    padding:22px;background:radial-gradient(circle at 50% 35%,#0e1e35 0%,#04070f 72%);
+  }
+  #overlay.show{display:flex}
+  .panel{
+    width:min(860px,96vw);max-height:88vh;overflow:auto;padding:30px 34px;border-radius:22px;
+    background:linear-gradient(160deg,rgba(14,28,50,.96),rgba(6,12,22,.98));
+    border:1px solid rgba(56,232,255,.25);
+    box-shadow:0 0 90px rgba(56,232,255,.09),0 30px 70px rgba(0,0,0,.75);
+  }
+  .panel::-webkit-scrollbar{width:9px}
+  .panel::-webkit-scrollbar-thumb{background:#1d4560;border-radius:9px}
+  .menu{text-align:center}
+  h1{margin:0 0 6px;font-size:clamp(30px,6.4vw,52px);letter-spacing:.06em;font-weight:900;line-height:1}
+  h1 span{color:var(--cyan);text-shadow:0 0 34px rgba(56,232,255,.7)}
+  .sub{margin:0 0 16px;color:var(--pink);font-weight:800;letter-spacing:.16em;font-size:11px;text-transform:uppercase}
+  .desc{margin:0 auto 24px;max-width:600px;color:#9fbdd4;font-size:14.5px;line-height:1.65}
+  .desc b{color:#fff}
+  .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{
+    pointer-events:auto;cursor:pointer;border-radius:12px;padding:14px 26px;
+    font-size:14px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;
+    background:#0e2136;color:#cfe9ff;border:1px solid #23506f;transition:.15s;
+  }
+  .btn:hover{background:#153350;border-color:var(--cyan);transform:translateY(-2px)}
+  .btn.primary{background:linear-gradient(135deg,#00b7d4,#38e8ff);color:#04121c;border:none;box-shadow:0 0 34px rgba(56,232,255,.45)}
+  .btn.primary:hover{filter:brightness(1.12)}
+  .stats{display:flex;gap:26px;justify-content:center;margin:6px 0 22px;flex-wrap:wrap}
+  .stat{text-align:center}
+  .stat b{display:block;font-size:30px;color:var(--cyan);font-weight:900}
+  .stat span{font-size:10.5px;letter-spacing:.16em;color:#7ea1ba;font-weight:800}
+  .big-title{font-size:clamp(26px,5vw,42px);font-weight:900;text-align:center;margin:0 0 6px}
+  .big-title.good{color:var(--green);text-shadow:0 0 40px rgba(60,255,140,.5)}
+  .big-title.bad{color:var(--red);text-shadow:0 0 40px rgba(255,74,94,.5)}
+
+  /* ---------- Study notes ---------- */
+  .study h2{margin:0 0 4px;font-size:26px;color:var(--cyan);letter-spacing:.05em}
+  .study .hint{color:#7ea1ba;font-size:13px;margin:0 0 18px}
+  .study h3{
+    margin:26px 0 10px;font-size:14px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--pink);border-bottom:1px solid rgba(255,77,157,.25);padding-bottom:7px;
+  }
+  .st-item{margin-bottom:11px;padding:10px 13px;border-radius:10px;background:rgba(56,232,255,.045);border-left:3px solid rgba(56,232,255,.45)}
+  .st-q{font-size:13.5px;font-weight:700;color:#dceeff;margin-bottom:4px}
+  .st-a{font-size:13px;color:var(--green);font-weight:700;margin-bottom:3px}
+  .st-e{font-size:12px;color:#8aa9c1;line-height:1.45}
+
+  @media (max-width:720px){
+    #hud{height:58px;padding:6px 10px;gap:8px}
+    #scoreBox{font-size:17px}
+    #qBanner{top:60px;font-size:14.5px;padding:10px 14px}
+    #timerBar{width:38vw}
+    .panel{padding:22px 18px}
+    .fb-exp{font-size:12px}
+    .fb-ans{font-size:13px}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="game"></canvas>
+
+<div id="hud">
+  <div class="hud-block">
+    <div id="waveName">WAVE 1/6</div>
+    <div id="qCount">Q 1/8</div>
+  </div>
+  <div class="hud-center">
+    <div id="timerBar"><div id="timerFill"></div></div>
+    <div id="timerLbl">TIME</div>
+  </div>
+  <div class="hud-right">
+    <div id="scoreBox">0</div>
+    <div id="comboBox"></div>
+    <div id="livesBox">❤❤❤❤❤</div>
+  </div>
+</div>
+
+<div id="qBanner"></div>
+<div id="feedback"></div>
+<div id="overlay"></div>
+
+<script>
+/* ============================================================
+   1. DATA — every fact from the notes becomes a question
+   ============================================================ */
+const TOPICS = [
+{ name:"The Skin of Infants", questions:[
+  { q:"How does the skin thickness of children under 3 years compare with adults?",
+    a:"1.5–3 times thinner", d:["1.5–3 times thicker","About the same","5–10 times thinner"],
+    e:"In children under 3 years the skin is 1.5–3 times less thick than in adults." },
+  { q:"Why is an infant's skin fair / light in colour?",
+    a:"The function of melanocytes is reduced", d:["Melanocytes are completely absent","Melanin is overproduced","The dermis is thicker"],
+    e:"The function of melanocytes is reduced, so the skin is fair and light." },
+  { q:"How much water does an infant's smooth, delicate skin contain?",
+    a:"Up to 80%", d:["Up to 30%","Up to 50%","Up to 95%"],
+    e:"Infant skin is smooth, delicate and soft and contains up to 80% of water." },
+  { q:"The structure of the epidermis in infants is best described as…",
+    a:"Loose — cells are relatively far apart", d:["Tightly packed and dense","Hard and fully keratinized","Fused solidly to the dermis"],
+    e:"The structure of the epidermis is loose: the cells are relatively far apart." },
+  { q:"Why do bullae form easily on an infant's skin?",
+    a:"Weak epidermis–dermis connection (poor anchoring fibers)", d:["A very thick periosteum","Overactive sebaceous glands","Excess melanin production"],
+    e:"The epidermis easily detaches from the dermis because anchoring fibers are poorly developed → bullae form." },
+  { q:"What is the pH of infant skin?",
+    a:"Neutral → poor antibacterial protection", d:["Strongly acidic → good antibacterial protection","Strongly alkaline","Identical to adult skin"],
+    e:"The pH is neutral, which gives poor antibacterial protection." },
+  { q:"Infant skin is predisposed to…",
+    a:"Peeling (desquamation)", d:["Thick keratinization","Hyperpigmentation","Sclerosis"],
+    e:"Infant skin is sensitive, vulnerable, easily damaged and predisposed to peeling (desquamation)." }
+]},
+
+{ name:"Sebaceous & Sweat Glands", questions:[
+  { q:"When do the sebaceous glands start functioning?",
+    a:"In utero — producing vernix caseosa", d:["At birth","At 3–4 weeks of life","At puberty"],
+    e:"The sebaceous glands start functioning in utero, producing vernix caseosa." },
+  { q:"What does vernix caseosa do for the fetus?",
+    a:"Protects skin from amniotic fluid and eases passage through the birth canal",
+    d:["Protects only from UV light","Kills all bacteria on the skin","Acts as the first hair coat"],
+    e:"Vernix caseosa covers the fetal skin, protects it from amniotic fluid and facilitates passage through the birth canal." },
+  { q:"When is the peak activity of the sebaceous glands?",
+    a:"In puberty", d:["In the first month of life","At 7–8 years","In old age"],
+    e:"The peak activity is in puberty." },
+  { q:"Adolescent acne is caused by sebaceous glands occluded with…",
+    a:"Epithelial plugs", d:["Calcium deposits","Anchoring fibers","Lanugo hairs"],
+    e:"In adolescents the sebaceous glands are often occluded with epithelial plugs → acne." },
+  { q:"Why is sweat gland function decreased during the first 3–4 months?",
+    a:"Excretory ducts are underdeveloped and closed with epithelial cells",
+    d:["The glands have not yet formed","The body contains no water","The skin is too thick"],
+    e:"During the first 3–4 months the excretory ducts are underdeveloped and closed with epithelial cells, so function is decreased." },
+  { q:"Sweating begins at the age of…",
+    a:"3–4 weeks", d:["3–4 days","3–4 months","7–8 years"],
+    e:"Sweating begins at the age of 3–4 weeks." },
+  { q:"Which statement about infant sweating is TRUE?",
+    a:"Infants sweat at a higher temperature than older children",
+    d:["Infants sweat at a lower temperature","Infants do not sweat at all","Sweating is fully adequate from birth"],
+    e:"Infants sweat at a higher temperature than older children." },
+  { q:"Adequate sweating occurs at…",
+    a:"7–8 years", d:["3–4 weeks","1 year","Puberty"],
+    e:"Adequate sweating occurs at 7–8 years." },
+  { q:"When do the apocrine sweat glands start functioning?",
+    a:"In puberty", d:["In utero","At 3–4 weeks","At 7–8 years"],
+    e:"Apocrine sweat glands start functioning in puberty." }
+]},
+
+{ name:"Hair & Nails", questions:[
+  { q:"The skin of a newborn is covered with…",
+    a:"Lanugo — short, soft hairs", d:["Thick terminal hair","Nothing but vellus patches","No hair at all"],
+    e:"The skin of a newborn is covered with lanugo (short and soft hairs)." },
+  { q:"In which babies is lanugo more evident?",
+    a:"Premature babies", d:["Post-term babies","Babies with acne","Babies with alopecia"],
+    e:"Lanugo is more evident in premature babies." },
+  { q:"Eyebrows and eyelashes in the newborn are…",
+    a:"Poorly developed", d:["Fully developed","Absent until puberty","Identical to adults"],
+    e:"Eyebrows and eyelashes are poorly developed." },
+  { q:"The primary soft hair on the scalp is replaced…",
+    a:"During the first 6 months", d:["During the first 3 days","At 5 years","At puberty"],
+    e:"Primary soft hair on the scalp is replaced during the first 6 months." },
+  { q:"Nails in term infants are…",
+    a:"Well developed and reaching the fingertips", d:["Completely absent","3 mm short of the fingertips","Present only on the toes"],
+    e:"Nails are well developed and reach the fingertips in term infants." },
+  { q:"What forms on the nail plate during the first 3 days of life?",
+    a:"A “physiological line” due to delayed nail growth", d:["Leukonychia","A subungual haematoma","A fungal spot"],
+    e:"In the first 3 days of life a delay in nail growth forms the so-called “physiological line” on the nail plate." },
+  { q:"When does the “physiological line” reach the free edge of the nail?",
+    a:"At the 3rd month of life", d:["At 3 weeks","At 6 months","At 1 year"],
+    e:"At the 3rd month of life it reaches the free edge of the nail." },
+  { q:"Alopecia means…",
+    a:"Loss of hair", d:["Excessive hair growth","Nail biting","Pitted nails"],
+    e:"Alopecia = loss of hair." },
+  { q:"Hypertrichosis means…",
+    a:"Excessive growth of hair", d:["Loss of hair","Dilated capillaries","Thickened skin"],
+    e:"Hypertrichosis = excessive growth of hair." },
+  { q:"Onychophagia is…",
+    a:"Nail biting", d:["Complete nail loss","White nails","Iron deficiency"],
+    e:"Onychophagia = nail biting." },
+  { q:"Celonychia (koilonychia) is associated with…",
+    a:"Iron deficiency", d:["Zinc excess","Vitamin D toxicity","Hyperthyroidism"],
+    e:"Celonychia (spoon-shaped nails) is associated with iron deficiency." },
+  { q:"Convex “watchglass” nails and “thimble” nails are examples of…",
+    a:"Nail signs / symptoms", d:["Primary skin lesions","Secondary skin lesions","Bone deformities"],
+    e:"Thimble nails, convex (watchglass) nails, leukonychia and onychophagia are nail signs/symptoms." },
+  { q:"Leukonychia refers to…",
+    a:"White discoloration of the nails", d:["Yellow nails","Absent nails","Pitted nails"],
+    e:"Leukonychia = white nails." }
+]},
+
+{ name:"Primary Lesions", questions:[
+  { q:"A “spot” (primary lesion) is…",
+    a:"A changed colour on a limited area, not rising above the skin surface",
+    d:["A fluid-filled blister","A raised solid lesion","A deep skin split"],
+    e:"A spot is a changed colour on a limited area that does not rise above the surface of the skin." },
+  { q:"Inflammatory spots (expanded blood vessels)…",
+    a:"Disappear on pressure and reappear when pressure stops",
+    d:["Never disappear","Are always purpuric","Are always larger than 20 mm"],
+    e:"Inflammatory spots disappear when pressing on the skin with a finger and reappear after the pressure stops." },
+  { q:"Roseola is a spot with a diameter of…",
+    a:"≤ 5 mm", d:["6–20 mm","More than 20 mm","1–2 cm"],
+    e:"Roseola ≤ 5 mm, macula 6–20 mm, erythema > 20 mm." },
+  { q:"A macula measures…",
+    a:"6–20 mm", d:["≤ 5 mm","More than 20 mm","Exactly 1–2 cm"],
+    e:"Macula = 6–20 mm in diameter." },
+  { q:"Erythema is a spot larger than…",
+    a:"20 mm", d:["5 mm","10 mm","50 mm"],
+    e:"Erythema > 20 mm in diameter." },
+  { q:"Which spots do NOT disappear on pressure?",
+    a:"Nevus, hemangioma and hemorrhagic spots",
+    d:["Roseola and erythema","Only maculae","All inflammatory spots"],
+    e:"Non-inflammatory spots (nevus, hemangioma, hemorrhagic spots) do not disappear after pressure." },
+  { q:"Petechiae are…",
+    a:"Pinpoint hemorrhages", d:["Multiple hemorrhages of 2–5 mm","Irregular hemorrhages over 5 mm","Dilated vessels"],
+    e:"Petechiae = pinpoint hemorrhages." },
+  { q:"Purpura is defined as…",
+    a:"Multiple hemorrhages of 2–5 mm", d:["Pinpoint hemorrhages","An irregular hemorrhage over 5 mm","A blister larger than 1 cm"],
+    e:"Purpura = multiple hemorrhages 2–5 mm." },
+  { q:"Ecchymosis is…",
+    a:"A hemorrhage with irregular shape, over 5 mm", d:["A pinpoint hemorrhage","A serous vesicle","A dilated capillary"],
+    e:"Ecchymosis = hemorrhage with irregular shape > 5 mm." },
+  { q:"Papules are…",
+    a:"Palpable, discrete lesions under 1 cm", d:["Elevated lesions over 1 cm","Fluid-filled lesions under 1 cm","Solid or cystic lesions of 1–2 cm"],
+    e:"Papules: palpable, discrete lesions < 1 cm in diameter." },
+  { q:"Plaques are…",
+    a:"Elevated lesions larger than 1 cm", d:["Palpable lesions under 1 cm","Small vesicles","Dried exudate"],
+    e:"Plaques: elevated lesions > 1 cm in diameter." },
+  { q:"Nodules are…",
+    a:"Palpable, solid or cystic, discrete lesions of 1–2 cm", d:["Elevated lesions over 1 cm","Lesions smaller than 1 cm","Pus-filled lesions"],
+    e:"Nodules: palpable, solid or cystic, discrete lesions 1–2 cm in diameter." },
+  { q:"Pustules are lesions…",
+    a:"With purulent content", d:["With serous fluid only","Containing only blood","Covered with keratin flakes"],
+    e:"Pustules are lesions with purulent content." },
+  { q:"Vesicles are…",
+    a:"Small (<1 cm) elements containing serous or hemorrhagic fluid",
+    d:["Large (>1 cm) fluid-filled elements","Solid raised lesions","Colour changes only"],
+    e:"Vesicles are small (<1 cm) elements containing serous or hemorrhagic fluid." },
+  { q:"Bullae are…",
+    a:"Large (>1 cm) vesicles", d:["Small (<1 cm) vesicles","Pus-filled lesions","Deep skin splits"],
+    e:"Bullae are large (>1 cm in diameter) vesicles." },
+  { q:"Wheals are…",
+    a:"Irregularly shaped, elevated, edematous skin areas", d:["Dried crusts","Deep fissures","Pigment changes"],
+    e:"Wheals: irregularly shaped, elevated, edematous skin areas." },
+  { q:"Hyperpigmentation means…",
+    a:"Increased skin pigment", d:["Decreased skin pigment","A dilated superficial vessel","Thickened skin"],
+    e:"Hyperpigmentation = increased skin pigment; hypopigmentation = decreased skin pigment." },
+  { q:"Telangiectasia is…",
+    a:"A dilated superficial blood vessel", d:["A deep skin split","A type of scar","Excessive hair growth"],
+    e:"Telangiectasia = a dilated superficial blood vessel." }
+]},
+
+{ name:"Secondary Lesions & Skin Signs", questions:[
+  { q:"Excoriation is…",
+    a:"Superficial linear skin erosion caused by scratching",
+    d:["Thickening of skin from chronic inflammation","A deep split into the dermis","Dried exudate on the surface"],
+    e:"Excoriation = superficial linear skin erosion caused by scratching." },
+  { q:"Lichenification is…",
+    a:"Thickening of skin with exaggerated markings from chronic inflammation",
+    d:["Loss of part of the epidermis","A fluid-filled lesion","A pigment disorder"],
+    e:"Lichenification = thickening of the skin with exaggerated skin markings secondary to chronic inflammation." },
+  { q:"Scales are…",
+    a:"Flakes of desiccated keratinized epidermal cells",
+    d:["Dried serum and blood","Deep dermal splits","Fibrous replacement tissue"],
+    e:"Scale = flakes on the skin surface formed by desiccated keratinized epidermal cells." },
+  { q:"A crust is…",
+    a:"Dried exudate of serum, blood, sebum or purulent material",
+    d:["A flake of keratin","A dilated vessel","A pigment change"],
+    e:"Crust = dried exudate of serum, blood, sebum or purulent material on the skin surface." },
+  { q:"A fissure is…",
+    a:"A deep skin split extending into the dermis",
+    d:["A superficial epidermal loss","A scar","A small vesicle"],
+    e:"Fissure = a deep skin split extending into the dermis." },
+  { q:"An erosion is…",
+    a:"A superficial, focal loss of part of the epidermis",
+    d:["A focal loss extending into the dermis","A fibrous scar","A dry flake"],
+    e:"Erosion = a superficial, focal loss of part of the epidermis." },
+  { q:"Ulceration is…",
+    a:"Focal loss of the epidermis extending into the dermis",
+    d:["Superficial loss of part of the epidermis","Thickening of the skin","A linear scratch"],
+    e:"Ulceration = focal loss of the epidermis extending into the dermis (deeper than an erosion)." },
+  { q:"A scar is…",
+    a:"Fibrous tissue replacing normal dermal/subcutaneous tissue after injury",
+    d:["Dried exudate on the surface","Desiccated keratin","A dilated capillary"],
+    e:"Scar = fibrous tissue that replaces normal dermal or subcutaneous tissue after skin injury." },
+  { q:"Dermographism literally means…",
+    a:"To “write on the skin”", d:["To “peel the skin”","To “thicken the skin”","To “colour the skin”"],
+    e:"Dermographism (dermatographism) literally means to “write on the skin”." },
+  { q:"In dermographism, firmly stroking the skin normally produces…",
+    a:"A white line, then red, and it is not stable",
+    d:["A permanent black line","A blister within seconds","No reaction at all"],
+    e:"Firmly stroke, scratch or rub the skin with a nail, pencil or tongue blade: normally white, then red, and not stable." }
+]},
+
+{ name:"Bones, Skull, Spine, Chest & Teeth", questions:[
+  { q:"Bones in children are…",
+    a:"More elastic", d:["More brittle","Identical to adult bones","Less vascular"],
+    e:"Bones in children are more elastic." },
+  { q:"A “greenstick” fracture is…",
+    a:"A subperiosteal fracture because the periosteum is thick",
+    d:["A complete break with displacement","An intra-articular fracture","A growth-plate fracture"],
+    e:"Greenstick = subperiosteal fracture (the periosteum is thick) with rapid healing." },
+  { q:"In newborns, all bones are filled with…",
+    a:"Red bone marrow (hemopoiesis)", d:["Yellow bone marrow","Cartilage only","Air"],
+    e:"In newborns all bones are filled with red bone marrow for hemopoiesis." },
+  { q:"In adults, red bone marrow remains only in…",
+    a:"Flat and short bones and epiphyses of long bones", d:["All bones of the body","The skull only","The diaphyses of long bones"],
+    e:"In adults red marrow is only in flat, short bones and the epiphysis of long bones." },
+  { q:"The large fontanelle is located…",
+    a:"At the intersection of the coronal and sagittal sutures",
+    d:["Between the occipital and parietal bones","At the mastoid process","Between the two frontal bones"],
+    e:"The large fontanelle is at the intersection of the coronal and sagittal sutures (up to 3×3 cm)." },
+  { q:"The large fontanelle usually closes by…",
+    a:"1–1.5 years", d:["1–2 months","3–4 weeks","5 years"],
+    e:"The large fontanelle closes usually by the age of 1–1.5 years." },
+  { q:"The small fontanelle is located…",
+    a:"Between the occipital and parietal bones",
+    d:["At the intersection of the coronal and sagittal sutures","On the forehead","Behind the ear"],
+    e:"The small fontanelle is located between the occipital and parietal bones." },
+  { q:"The small fontanelle is closed…",
+    a:"At the time of birth or by 1–2 months of life", d:["By 1–1.5 years","By 5 years","By 3–4 weeks"],
+    e:"The small fontanelle is closed at birth or by 1–2 months of life." },
+  { q:"In the newborn skull, which volume is significantly bigger?",
+    a:"The brain skull compared with the facial skull",
+    d:["The facial skull compared with the brain skull","They are equal","The mandible is the largest part"],
+    e:"Brain skull volume is significantly bigger than the facial one." },
+  { q:"The spine of a newborn looks like…",
+    a:"An arch", d:["An S-shape","A perfectly straight line","A C-shape with lumbar lordosis"],
+    e:"The spine of a newborn looks like an arch; physiological curves start forming after 2–3 months." },
+  { q:"Cervical lordosis is formed when the child begins to…",
+    a:"Lift his head", d:["Sit","Stand","Walk"],
+    e:"Cervical lordosis is formed after the child begins to lift his head." },
+  { q:"Thoracic kyphosis appears when the child begins to…",
+    a:"Sit", d:["Lift his head","Walk","Speak"],
+    e:"Thoracic kyphosis appears when the child begins to sit." },
+  { q:"Lumbar lordosis and sacral kyphosis appear at…",
+    a:"9–12 months, when the child begins to stand and walk", d:["2–3 months of age","Birth","5 years of age"],
+    e:"Lumbar lordosis and sacral kyphosis appear at 9–12 months when the child begins to stand and walk." },
+  { q:"The ribs in infants are placed…",
+    a:"Horizontally", d:["Obliquely downwards","Vertically","At a 45° angle"],
+    e:"Ribs are placed horizontally." },
+  { q:"In the infant chest…",
+    a:"The anterior–posterior size is greater than the transverse one",
+    d:["The transverse size is greater","Both sizes are equal","The chest is completely flat"],
+    e:"The anterior–posterior size of the chest is greater than the cross (transverse) one." },
+  { q:"Pectus excavatum is also called…",
+    a:"Koilosternia", d:["Chicken breast","Keeled breast","Greenstick chest"],
+    e:"Pectus excavatum = koilosternia. The “chicken breast” is the keeled breast." },
+  { q:"Eruption of teeth usually starts at the age of…",
+    a:"5–7 months", d:["Birth","3–4 weeks","2 years"],
+    e:"Eruption of teeth usually starts at the age of 5–7 months." },
+  { q:"Teething may be accompanied by…",
+    a:"Fever, sleep disturbance and diarrhea", d:["Jaundice and seizures","Rash and alopecia","A bulging fontanelle"],
+    e:"Eruption may be accompanied by fever, sleep disturbance and diarrhea." },
+  { q:"By 2 years of age a child has…",
+    a:"20 milk (deciduous) teeth", d:["10 milk teeth","16 milk teeth","32 permanent teeth"],
+    e:"By 2 years there are 20 milk (deciduous) teeth." },
+  { q:"In the formula X = n − 4 for milk teeth, n is…",
+    a:"The child's age in months", d:["The child's age in years","The number of permanent teeth","The child's weight in kg"],
+    e:"X = n − 4, where n is the child's age in months." },
+  { q:"Replacement of milk teeth by permanent teeth usually starts at…",
+    a:"5 years", d:["2 years","7 years","12 years"],
+    e:"The period of replacement of milk teeth by permanent ones starts usually at 5 years." },
+  { q:"In the formula X = 4n − 20 for permanent teeth, n is…",
+    a:"The child's age in years", d:["The child's age in months","The number of milk teeth","The years since puberty"],
+    e:"X = 4n − 20, where n is the child's age in years." }
+]}
+];
+
+/* ============================================================
+   2. UTILITIES
+   ============================================================ */
+const rand=(a,b)=>a+Math.random()*(b-a);
+const randInt=(a,b)=>Math.floor(rand(a,b+1));
+function shuffle(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=randInt(0,i);[a[i],a[j]]=[a[j],a[i]];}return a;}
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* tiny sound engine */
+let actx=null;
+function beep(freq,dur,type,vol){
+  try{
+    if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)();
+    const o=actx.createOscillator(), g=actx.createGain();
+    o.type=type||'sine'; o.frequency.value=freq;
+    g.gain.setValueAtTime(vol||0.05,actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+dur);
+    o.connect(g); g.connect(actx.destination);
+    o.start(); o.stop(actx.currentTime+dur+0.02);
+  }catch(e){}
+}
+
+/* ============================================================
+   3. CANVAS SETUP
+   ============================================================ */
+const cvs=document.getElementById('game');
+const ctx=cvs.getContext('2d');
+let W=0,H=0,DPR=1;
+
+const el={
+  waveName:document.getElementById('waveName'),
+  qCount:document.getElementById('qCount'),
+  score:document.getElementById('scoreBox'),
+  combo:document.getElementById('comboBox'),
+  lives:document.getElementById('livesBox'),
+  timerFill:document.getElementById('timerFill'),
+  qBanner:document.getElementById('qBanner'),
+  feedback:document.getElementById('feedback'),
+  overlay:document.getElementById('overlay')
+};
+
+/* ============================================================
+   4. GAME STATE
+   ============================================================ */
+const G={
+  phase:'menu',            // menu | intro | question | reveal | over | victory
+  wave:0, pool:[], qi:0,
+  lives:5, maxLives:5,
+  score:0, combo:0, bestCombo:0, correct:0, answered:0,
+  timeLeft:0, timeMax:22, phaseTimer:0,
+  targets:[], bullets:[], particles:[],
+  aim:{x:0,y:0}, turret:{x:0,y:0,ang:-Math.PI/2}, muzzle:{x:0,y:0},
+  cooldown:0, shake:0, t:0
+};
+
+const QUESTIONS_PER_WAVE=8;
+
+/* ============================================================
+   5. RESIZE / LAYOUT
+   ============================================================ */
+function resize(){
+  DPR=Math.min(window.devicePixelRatio||1,2);
+  W=window.innerWidth; H=window.innerHeight;
+  cvs.width=Math.floor(W*DPR); cvs.height=Math.floor(H*DPR);
+  cvs.style.width=W+'px'; cvs.style.height=H+'px';
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  relayout();
+}
+function relayout(){
+  const n=G.targets.length;
+  if(!n) return;
+  const slotW=W/n;
+  const r=Math.max(44,Math.min(80,slotW*0.42,H*0.15));
+  G.targets.forEach((t,i)=>{
+    t.ax=slotW*(i+0.5);
+    t.r=r;
+    t.ay=clamp(t.ay, Math.max(180,H*0.24), Math.max(240,H*0.68));
+  });
+}
+window.addEventListener('resize',resize);
+
+/* ============================================================
+   6. QUESTION FLOW
+   ============================================================ */
+function startGame(){
+  el.overlay.classList.remove('show');
+  G.score=0; G.lives=G.maxLives; G.combo=0; G.bestCombo=0;
+  G.correct=0; G.answered=0;
+  startWave(0);
+}
+
+function startWave(i){
+  G.wave=i;
+  const bank=TOPICS[i].questions;
+  G.pool=shuffle(bank).slice(0,Math.min(QUESTIONS_PER_WAVE,bank.length));
+  G.qi=0;
+  G.phase='intro';
+  G.phaseTimer=2.2;
+  G.targets=[]; G.bullets=[]; G.particles=[];
+  hideFeedback();
+  el.qBanner.classList.remove('on');
+  updateHUD();
+}
+
+function loadQuestion(){
+  const q=G.pool[G.qi];
+  if(!q){ endWave(); return; }
+  G.phase='question';
+  G.timeLeft=G.timeMax;
+  G.bullets=[]; G.particles=[]; G.targets=[];
+  G.cooldown=0;
+  hideFeedback();
+
+  const opts=shuffle([{text:q.a,correct:true}].concat(q.d.map(t=>({text:t,correct:false}))));
+  const n=opts.length;
+  const slotW=W/n;
+  const r=Math.max(44,Math.min(80,slotW*0.42,H*0.15));
+  const hues=[190,320,45,150];
+
+  for(let i=0;i<n;i++){
+    const ay=rand(Math.max(190,H*0.26),Math.max(250,H*0.68));
+    G.targets.push({
+      ax:slotW*(i+0.5), ay:ay, x:slotW*(i+0.5), y:ay, r:r,
+      text:opts[i].text, correct:opts[i].correct,
+      ph:rand(0,6.283), sp:rand(0.55,1.0), amp:rand(7,20),
+      scale:0, reveal:null, hue:hues[i%4]
+    });
+  }
+
+  el.qBanner.textContent=q.q;
+  el.qBanner.classList.add('on');
+  updateHUD();
+}
+
+function resolve(hitTarget, isCorrect, reason){
+  if(G.phase!=='question') return;
+  G.phase='reveal';
+  G.phaseTimer=4.0;
+  G.answered++;
+  const q=G.pool[G.qi];
+
+  G.targets.forEach(t=>{ if(t.correct) t.reveal='good'; });
+
+  if(isCorrect){
+    G.correct++;
+    G.combo++;
+    if(G.combo>G.bestCombo) G.bestCombo=G.combo;
+    const timeBonus=Math.round(G.timeLeft*8);
+    const gained=100+timeBonus+(G.combo-1)*25;
+    G.score+=gained;
+    for(let i=0;i<26;i++) explodeParticle(hitTarget?hitTarget.x:W/2, hitTarget?hitTarget.y:H/2, 150);
+    beep(880,0.10,'sine',0.06);
+    setTimeout(()=>beep(1320,0.13,'sine',0.045),85);
+    showFeedback(true,q,gained);
+  }else{
+    G.combo=0;
+    G.lives--;
+    if(hitTarget) hitTarget.reveal='bad';
+    for(let i=0;i<20;i++) explodeParticle(hitTarget?hitTarget.x:W/2, hitTarget?hitTarget.y:H/2, 355);
+    beep(160,0.28,'sawtooth',0.05);
+    showFeedback(false,q,0,reason);
+  }
+  G.shake=Math.min(G.shake+5,10);
+  updateHUD();
+}
+
+function nextStep(){
+  if(G.lives<=0){ endGame(false); return; }
+  if(G.qi+1>=G.pool.length){ endWave(); return; }
+  G.qi++;
+  loadQuestion();
+}
+
+function endWave(){
+  if(G.wave+1>=TOPICS.length){ endGame(true); return; }
+  G.wave++;
+  G.lives=Math.min(G.maxLives,G.lives+2);
+  G.phase='intro';
+  G.phaseTimer=2.2;
+  G.targets=[]; G.bullets=[]; G.particles=[];
+  const bank=TOPICS[G.wave].questions;
+  G.pool=shuffle(bank).slice(0,Math.min(QUESTIONS_PER_WAVE,bank.length));
+  G.qi=0;
+  hideFeedback();
+  el.qBanner.classList.remove('on');
+  updateHUD();
+}
+
+function endGame(victory){
+  G.phase=victory?'victory':'over';
+  G.targets=[]; G.bullets=[]; G.particles=[];
+  hideFeedback();
+  el.qBanner.classList.remove('on');
+  const acc=G.answered?Math.round(G.correct/G.answered*100):0;
+  const title=victory?'🏆 ALL WAVES CLEARED!':'💀 GAME OVER';
+  const cls=victory?'good':'bad';
+  el.overlay.innerHTML=`
+    <div class="panel">
+      <h1 class="big-title ${cls}">${title}</h1>
+      <p class="sub" style="text-align:center">${victory?'You mastered pediatric skin, nails, bones & teeth':'The skin is a fragile thing… try again'}</p>
+      <div class="stats">
+        <div class="stat"><b>${G.score.toLocaleString()}</b><span>SCORE</span></div>
+        <div class="stat"><b>${G.correct}/${G.answered}</b><span>CORRECT</span></div>
+        <div class="stat"><b>${acc}%</b><span>ACCURACY</span></div>
+        <div class="stat"><b>${G.bestCombo}×</b><span>BEST COMBO</span></div>
+      </div>
+      <div class="btns">
+        <button class="btn primary" id="btnAgain">▶ PLAY AGAIN</button>
+        <button class="btn" id="btnMenu">🏠 MAIN MENU</button>
+        <button class="btn" id="btnNotes">📖 STUDY NOTES</button>
+      </div>
+    </div>`;
+  el.overlay.classList.add('show');
+  document.getElementById('btnAgain').onclick=startGame;
+  document.getElementById('btnMenu').onclick=showMenu;
+  document.getElementById('btnNotes').onclick=showStudy;
+  if(victory){ beep(660,0.15,'sine',0.07); setTimeout(()=>beep(880,0.15,'sine',0.07),150); setTimeout(()=>beep(1320,0.3,'sine',0.07),300); }
+  else beep(120,0.5,'sawtooth',0.06);
+}
+
+/* ============================================================
+   7. FEEDBACK + HUD
+   ============================================================ */
+function showFeedback(ok,q,gained,reason){
+  el.feedback.className=(ok?'ok':'bad')+' show';
+  el.feedback.innerHTML=`
+    <div class="fb-head">${ok?'✔ CORRECT!  +'+gained:(reason==='timeout'?'⏱ TIME OUT!':'✘ WRONG!')}</div>
+    <div class="fb-ans"><b>Answer:</b> ${escapeHtml(q.a)}</div>
+    <div class="fb-exp">${escapeHtml(q.e)}</div>`;
+}
+function hideFeedback(){ el.feedback.className=''; el.feedback.innerHTML=''; }
+
+function updateHUD(){
+  if(G.phase==='menu'){ return; }
+  const topic=TOPICS[G.wave]?TOPICS[G.wave].name:'';
+  el.waveName.textContent='WAVE '+(G.wave+1)+'/'+TOPICS.length+' · '+topic;
+  el.qCount.textContent='Q '+Math.min(G.qi+1,G.pool.length||1)+'/'+(G.pool.length||QUESTIONS_PER_WAVE);
+  el.score.textContent=G.score.toLocaleString();
+  el.combo.textContent=G.combo>1?('COMBO ×'+G.combo):'';
+  let hearts='';
+  for(let i=0;i<G.maxLives;i++) hearts+= i<G.lives?'❤':'♡';
+  el.lives.textContent=hearts;
+}
+
+/* ============================================================
+   8. SHOOTING
+   ============================================================ */
+function fire(){
+  if(G.phase!=='question'||G.cooldown>0) return;
+  const mx=G.muzzle.x, my=G.muzzle.y;
+  let dx=G.aim.x-mx, dy=G.aim.y-my;
+  const d=Math.hypot(dx,dy)||1;
+  dx/=d; dy/=d;
+  G.bullets.push({x:mx+dx*26,y:my+dy*26,vx:dx*1350,vy:dy*1350,r:6,life:2.2});
+  G.cooldown=0.13;
+  G.shake=Math.min(G.shake+1.6,7);
+  beep(560,0.05,'square',0.028);
+}
+
+function explodeParticle(x,y,hue){
+  const a=rand(0,6.283), s=rand(60,340);
+  G.particles.push({
+    x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,
+    life:rand(0.35,0.8),max:0.8,hue:hue+rand(-25,25),size:rand(1.5,4.5)
+  });
+}
+
+/* ============================================================
+   9. UPDATE
+   ============================================================ */
+function update(dt){
+  G.t+=dt;
+  if(G.shake>0) G.shake=Math.max(0,G.shake-dt*22);
+  if(G.cooldown>0) G.cooldown-=dt;
+
+  /* turret aim */
+  G.turret.x=W/2; G.turret.y=H-8;
+  G.turret.ang=Math.atan2(G.aim.y-G.turret.y,G.aim.x-G.turret.x);
+  G.muzzle.x=G.turret.x+Math.cos(G.turret.ang)*46;
+  G.muzzle.y=G.turret.y+Math.sin(G.turret.ang)*46;
+
+  /* phases */
+  if(G.phase==='intro'){
+    G.phaseTimer-=dt;
+    if(G.phaseTimer<=0) loadQuestion();
+  }else if(G.phase==='question'){
+    G.timeLeft-=dt;
+    const pct=Math.max(0,G.timeLeft/G.timeMax);
+    el.timerFill.style.width=(pct*100)+'%';
+    el.timerFill.style.background = pct>0.5
+      ? 'linear-gradient(90deg,#3cff8c,#38e8ff)'
+      : pct>0.25 ? 'linear-gradient(90deg,#ffc24d,#ff8a3c)'
+      : 'linear-gradient(90deg,#ff4a5e,#ff2d55)';
+    if(G.timeLeft<=0){ G.timeLeft=0; resolve(null,false,'timeout'); }
+  }else if(G.phase==='reveal'){
+    G.phaseTimer-=dt;
+    if(G.phaseTimer<=0) nextStep();
+  }
+
+  /* targets float + scale-in */
+  G.targets.forEach(t=>{
+    if(t.scale<1) t.scale=Math.min(1,t.scale+dt*4.5);
+    t.x=t.ax+Math.sin(G.t*t.sp+t.ph)*t.amp;
+    t.y=t.ay+Math.cos(G.t*t.sp*0.82+t.ph)*t.amp*0.55;
+  });
+
+  /* bullets */
+  for(let i=G.bullets.length-1;i>=0;i--){
+    const b=G.bullets[i];
+    b.x+=b.vx*dt; b.y+=b.vy*dt; b.life-=dt;
+    let remove=false;
+    if(G.phase==='question'){
+      for(const t of G.targets){
+        if(t.reveal) continue;
+        const dist=Math.hypot(b.x-t.x,b.y-t.y);
+        if(dist<t.r*t.scale+b.r){
+          resolve(t,t.correct);
+          remove=true;
+          break;
+        }
+      }
+    }
+    if(remove||b.life<=0||b.x<-60||b.x>W+60||b.y<-60||b.y>H+60) G.bullets.splice(i,1);
+  }
+
+  /* particles */
+  for(let i=G.particles.length-1;i>=0;i--){
+    const p=G.particles[i];
+    p.x+=p.vx*dt; p.y+=p.vy*dt;
+    p.vx*=0.97; p.vy=p.vy*0.97+150*dt;
+    p.life-=dt;
+    if(p.life<=0) G.particles.splice(i,1);
+  }
+}
+
+/* ============================================================
+   10. RENDER
+   ============================================================ */
+function wrapLines(text,maxWidth){
+  const words=text.split(' ');
+  const lines=[]; let cur='';
+  for(const w of words){
+    const test=cur?cur+' '+w:w;
+    if(ctx.measureText(test).width<=maxWidth||!cur) cur=test;
+    else { lines.push(cur); cur=w; }
+  }
+  if(cur) lines.push(cur);
+  return lines;
+}
+
+function drawTarget(t){
+  const r=t.r*t.scale;
+  if(r<1) return;
+
+  let ringCol;
+  if(t.reveal==='good') ringCol='#3cff8c';
+  else if(t.reveal==='bad') ringCol='#ff4a5e';
+  else ringCol='hsla('+t.hue+',95%,66%,0.95)';
+
+  ctx.save();
+  ctx.translate(t.x,t.y);
+
+  /* glow */
+  ctx.shadowColor = t.reveal==='good' ? 'rgba(60,255,140,.95)'
+                  : t.reveal==='bad'  ? 'rgba(255,74,94,.95)'
+                  : 'hsla('+t.hue+',95%,60%,.55)';
+  ctx.shadowBlur = t.reveal ? 42 : 24;
+
+  const g=ctx.createRadialGradient(-r*0.32,-r*0.36,r*0.08,0,0,r);
+  g.addColorStop(0,'rgba(255,255,255,0.22)');
+  g.addColorStop(0.5,'hsla('+t.hue+',68%,24%,0.94)');
+  g.addColorStop(1,'hsla('+t.hue+',80%,10%,0.97)');
+  ctx.fillStyle=g;
+  ctx.beginPath(); ctx.arc(0,0,r,0,6.2832); ctx.fill();
+  ctx.shadowBlur=0;
+
+  /* ring */
+  ctx.lineWidth = t.reveal ? 4.5 : 2.5;
+  ctx.strokeStyle = ringCol;
+  ctx.beginPath(); ctx.arc(0,0,r-1.5,0,6.2832); ctx.stroke();
+
+  /* inner dashed ring for style */
+  ctx.setLineDash([4,7]);
+  ctx.lineWidth=1;
+  ctx.strokeStyle=t.reveal?'rgba(255,255,255,.45)':'hsla('+t.hue+',90%,70%,.32)';
+  ctx.beginPath(); ctx.arc(0,0,r*0.9,0,6.2832); ctx.stroke();
+  ctx.setLineDash([]);
+
+  /* text */
+  const maxW=r*1.55;
+  let size=Math.min(18,r*0.30);
+  let lines=[];
+  for(;;){
+    ctx.font='700 '+size+'px ui-sans-serif,system-ui,sans-serif';
+    lines=wrapLines(t.text,maxW);
+    if(lines.length*size*1.22<=r*1.62||size<=9) break;
+    size-=1;
+  }
+  const lh=size*1.22;
+  let y=-((lines.length-1)*lh)/2;
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.fillStyle='#f2fbff';
+  ctx.shadowColor='rgba(0,0,0,.85)';
+  ctx.shadowBlur=6;
+  for(const ln of lines){
+    ctx.fillText(ln,0,y);
+    y+=lh;
+  }
+  ctx.shadowBlur=0;
+  ctx.restore();
+}
+
+function roundRect(c,x,y,w,h,rad){
+  c.beginPath();
+  c.moveTo(x+rad,y);
+  c.arcTo(x+w,y,x+w,y+h,rad);
+  c.arcTo(x+w,y+h,x,y+h,rad);
+  c.arcTo(x,y+h,x,y,rad);
+  c.arcTo(x,y,x+w,y,rad);
+  c.closePath();
+}
+
+function drawTurret(){
+  const t=G.turret;
+  ctx.save();
+  ctx.translate(t.x,t.y);
+
+  /* barrel */
+  ctx.save();
+  ctx.rotate(t.ang);
+  const bg=ctx.createLinearGradient(0,-9,0,9);
+  bg.addColorStop(0,'#9df6ff'); bg.addColorStop(0.5,'#38e8ff'); bg.addColorStop(1,'#0f4a63');
+  ctx.fillStyle=bg;
+  ctx.shadowColor='rgba(56,232,255,.8)'; ctx.shadowBlur=16;
+  roundRect(ctx,4,-9,52,18,9); ctx.fill();
+  ctx.shadowBlur=0;
+  ctx.restore();
+
+  /* base */
+  const g2=ctx.createRadialGradient(0,-20,4,0,0,32);
+  g2.addColorStop(0,'#a8f8ff'); g2.addColorStop(0.6,'#1d6f92'); g2.addColorStop(1,'#08202e');
+  ctx.fillStyle=g2;
+  ctx.beginPath(); ctx.arc(0,0,27,Math.PI,0); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle='rgba(56,232,255,.85)'; ctx.lineWidth=2; ctx.stroke();
+  ctx.restore();
+}
+
+function drawCrosshair(){
+  if(G.phase!=='question') return;
+  const x=G.aim.x, y=G.aim.y;
+  ctx.save();
+  ctx.strokeStyle='rgba(56,232,255,.85)';
+  ctx.lineWidth=1.6;
+  ctx.shadowColor='rgba(56,232,255,.9)'; ctx.shadowBlur=10;
+  ctx.beginPath(); ctx.arc(x,y,13,0,6.2832); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x-20,y); ctx.lineTo(x-6,y);
+  ctx.moveTo(x+6,y);  ctx.lineTo(x+20,y);
+  ctx.moveTo(x,y-20); ctx.lineTo(x,y-6);
+  ctx.moveTo(x,y+6);  ctx.lineTo(x,y+20);
+  ctx.stroke();
+  ctx.fillStyle='rgba(56,232,255,.9)';
+  ctx.beginPath(); ctx.arc(x,y,1.8,0,6.2832); ctx.fill();
+  ctx.restore();
+}
+
+function drawIntro(){
+  ctx.save();
+  ctx.fillStyle='rgba(5,10,20,.80)';
+  ctx.fillRect(0,0,W,H);
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+
+  const f1=Math.min(58,Math.max(26,W*0.055));
+  const f2=Math.min(36,Math.max(19,W*0.035));
+  const f3=Math.min(17,Math.max(12,W*0.018));
+
+  ctx.fillStyle='#38e8ff';
+  ctx.shadowColor='rgba(56,232,255,.9)'; ctx.shadowBlur=30;
+  ctx.font='900 '+f1+'px ui-sans-serif,system-ui,sans-serif';
+  ctx.fillText('WAVE '+(G.wave+1),W/2,H/2-70);
+  ctx.shadowBlur=0;
+
+  ctx.fillStyle='#ffffff';
+  ctx.font='800 '+f2+'px ui-sans-serif,system-ui,sans-serif';
+  ctx.fillText(TOPICS[G.wave].name,W/2,H/2);
+
+  ctx.fillStyle='rgba(255,255,255,.55)';
+  ctx.font='600 '+f3+'px ui-sans-serif,system-ui,sans-serif';
+  ctx.fillText('Get ready…',W/2,H/2+52);
+  ctx.restore();
+}
+
+function render(){
+  /* background */
+  const bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#0a1424'); bg.addColorStop(0.55,'#070d19'); bg.addColorStop(1,'#03060d');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+
+  /* grid */
+  ctx.strokeStyle='rgba(56,232,255,0.045)'; ctx.lineWidth=1;
+  ctx.beginPath();
+  const gs=64;
+  for(let x=0;x<W;x+=gs){ ctx.moveTo(x,0); ctx.lineTo(x,H); }
+  for(let y=0;y<H;y+=gs){ ctx.moveTo(0,y); ctx.lineTo(W,y); }
+  ctx.stroke();
+
+  /* ground glow */
+  const gl=ctx.createRadialGradient(W/2,H+40,10,W/2,H+40,Math.max(W,H)*0.65);
+  gl.addColorStop(0,'rgba(56,232,255,.10)');
+  gl.addColorStop(1,'rgba(56,232,255,0)');
+  ctx.fillStyle=gl;
+  ctx.fillRect(0,H*0.5,W,H*0.5);
+
+  ctx.save();
+  if(G.shake>0.2) ctx.translate(rand(-G.shake,G.shake),rand(-G.shake,G.shake));
+
+  G.targets.forEach(drawTarget);
+
+  /* bullets */
+  G.bullets.forEach(b=>{
+    ctx.save();
+    ctx.shadowColor='rgba(120,255,255,.95)'; ctx.shadowBlur=18;
+    const bgd=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,b.r*2.4);
+    bgd.addColorStop(0,'#ffffff');
+    bgd.addColorStop(0.45,'#7ff3ff');
+    bgd.addColorStop(1,'rgba(56,232,255,0)');
+    ctx.fillStyle=bgd;
+    ctx.beginPath(); ctx.arc(b.x,b.y,b.r*2.4,0,6.2832); ctx.fill();
+    ctx.restore();
+  });
+
+  /* particles */
+  G.particles.forEach(p=>{
+    const a=Math.max(0,p.life/p.max);
+    ctx.save();
+    ctx.globalAlpha=a;
+    ctx.shadowColor='hsla('+p.hue+',100%,65%,.95)'; ctx.shadowBlur=14;
+    ctx.fillStyle='hsla('+p.hue+',100%,72%,1)';
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.size*a,0,6.2832); ctx.fill();
+    ctx.restore();
+  });
+
+  ctx.restore();
+
+  if(G.phase==='question'||G.phase==='intro'||G.phase==='reveal') drawTurret();
+  drawCrosshair();
+  if(G.phase==='intro') drawIntro();
+}
+
+/* ============================================================
+   11. MAIN LOOP
+   ============================================================ */
+let lastT=performance.now();
+function loop(now){
+  const dt=Math.min((now-lastT)/1000,0.05);
+  lastT=now;
+  if(G.phase!=='menu'&&G.phase!=='over'&&G.phase!=='victory') update(dt);
+  else { if(G.shake>0) G.shake=Math.max(0,G.shake-dt*22); }
+  render();
+  requestAnimationFrame(loop);
+}
+
+/* ============================================================
+   12. INPUT
+   ============================================================ */
+function pointerPos(e){
+  const r=cvs.getBoundingClientRect();
+  return {x:e.clientX-r.left,y:e.clientY-r.top};
+}
+cvs.addEventListener('pointermove',e=>{
+  const p=pointerPos(e); G.aim.x=p.x; G.aim.y=p.y;
+});
+cvs.addEventListener('pointerdown',e=>{
+  const p=pointerPos(e); G.aim.x=p.x; G.aim.y=p.y;
+  if(!actx){ try{ actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(err){} }
+  if(G.phase==='question'){ fire(); }
+  else if(G.phase==='reveal'&&G.phaseTimer<=3.0){ nextStep(); }
+});
+window.addEventListener('keydown',e=>{
+  if(e.code==='Space'&&G.phase==='question'){ e.preventDefault(); fire(); }
+  if(e.code==='Enter'&&G.phase==='reveal'&&G.phaseTimer<=3.0){ nextStep(); }
+});
+window.addEventListener('contextmenu',e=>e.preventDefault());
+
+/* ============================================================
+   13. MENUS
+   ============================================================ */
+function showMenu(){
+  G.phase='menu';
+  G.targets=[];G.bullets=[];G.particles=[];
+  hideFeedback();
+  el.qBanner.classList.remove('on');
+  el.overlay.innerHTML=`
+    <div class="panel menu">
+      <h1>DERMA<span>BLASTER</span></h1>
+      <p class="sub">Pediatric Skin · Nails · Bones · Teeth</p>
+      <p class="desc">
+        Read the question at the top, aim with your mouse and <b>shoot the bubble with the correct answer</b>
+        before the timer runs out. Each hit teaches you the fact behind it.<br><br>
+        <b>6 waves · 48 questions</b> — infant skin, glands, hair &amp; nails, primary lesions,
+        secondary lesions &amp; skin signs, bones/skull/spine/chest/teeth.
+      </p>
+      <div class="btns">
+        <button class="btn primary" id="btnStart">▶ START GAME</button>
+        <button class="btn" id="btnStudy">📖 STUDY NOTES</button>
+      </div>
+    </div>`;
+  el.overlay.classList.add('show');
+  document.getElementById('btnStart').onclick=startGame;
+  document.getElementById('btnStudy').onclick=showStudy;
+}
+
+function showStudy(){
+  let html='<div class="panel study"><h2>📖 Study Notes</h2>'+
+           '<p class="hint">Every fact used in the game — read it, then go shoot it.</p>';
+  TOPICS.forEach((t,i)=>{
+    html+='<h3>'+(i+1)+'. '+escapeHtml(t.name)+'</h3>';
+    t.questions.forEach(q=>{
+      html+='<div class="st-item">'+
+            '<div class="st-q">'+escapeHtml(q.q)+'</div>'+
+            '<div class="st-a">→ '+escapeHtml(q.a)+'</div>'+
+            '<div class="st-e">'+escapeHtml(q.e)+'</div>'+
+            '</div>';
+    });
+  });
+  html+='<div class="btns" style="margin-top:26px">'+
+        '<button class="btn" id="btnBack">← BACK</button>'+
+        '<button class="btn primary" id="btnPlayFromNotes">▶ START GAME</button></div></div>';
+  el.overlay.innerHTML=html;
+  el.overlay.classList.add('show');
+  document.getElementById('btnBack').onclick=showMenu;
+  document.getElementById('btnPlayFromNotes').onclick=startGame;
+}
+
+/* ============================================================
+   14. BOOT
+   ============================================================ */
+resize();
+G.aim.x=W/2; G.aim.y=H*0.45;
+updateHUD();
+showMenu();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
