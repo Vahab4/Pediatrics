@@ -134,35 +134,3 @@ Urinalysis & Functional Renal Tests:
 	• Addis-Kakovsky test (24-hr): ≤2,000,000 leukocytes, ≤1,000,000 erythrocytes.
 	• Rehberg test / Schwartz formula: Normal GFR is 30–50 ml/min/1.73 m² in newborns and 90–120 ml/min/1.73 m² after age 1; tubular reabsorption is 97–99%.
 	• Zimnitsky test (8 three-hour portions): Daytime diuresis is 2/3–3/4 of total daily volume; max specific gravity ≥1.018 with fluctuations of at least 0.010–0.015. 
-INTERPRETATION OF THE 10 COMMON BLOOD TEST CASES (CBC)
-Note on Pediatric Leukocyte Crossovers: Normally, neutrophils predominate at birth (~60–65%), equalize with lymphocytes around days 4–5 (1st crossover), lymphocytes predominate (~60%) until ages 4–5 (2nd crossover), and neutrophils predominate thereafter.
-1. Girl, 9 years (Page 1, Left):
-• Findings: Hb 129 g/L (normal), RBC 4.39 × 10^12/L (normal), WBC 8.4 × 10^9/L (normal), Segmented neutrophils 61% / Lymphocytes 32% (normal post-crossover formula), ESR 12 mm/h (normal). Platelets 132 × 10^9/L (borderline/mild thrombocytopenia; normal 150–400) with prolonged bleeding time (13 min; normal 2–5 min).
-• Conclusion: Mild thrombocytopenia with prolonged bleeding duration (suggestive of thrombocytopathy or early immune thrombocytopenia).
-2. Boy, 11 years (Page 1, Right):
-• Findings: Hb 132 g/L, RBC 4.0 × 10^12/L, Platelets 291 × 10^9/L, WBC 7.4 × 10^9/L, Segmented neutrophils 58%, Lymphocytes 36%, ESR 5 mm/h.
-• Conclusion: Completely normal complete blood count for an 11-year-old child.
-3. Boy, 1.5 years (Page 2, Left):
-• Findings: Hb 118 g/L, RBC 4.4 × 10^12/L, Color index 0.86, Platelets 292 × 10^9/L, WBC 7.6 × 10^9/L, Segmented neutrophils 25%, Lymphocytes 67% (physiological lymphocytosis for age), ESR 5 mm/h, mild anisocytosis.
-• Conclusion: Age-appropriate normal CBC (physiological lymphocytic predominance between the 1st and 2nd crossovers).
-4. Girl, 4 days (Page 2, Right):
-• Findings: Hb 188 g/L, RBC 5.6 × 10^12/L, Reticulocytes 1.5%, WBC 14.9 × 10^9/L, Neutrophils 49% (3% band + 46% segmented) vs. Lymphocytes 45%, ESR 2 mm/h, anisocytosis, macrocytosis, single normoblasts.
-• Conclusion: Normal neonatal CBC demonstrating the first physiological leukocyte crossover (neutrophils and lymphocytes equalizing at ~45–49% on day 4) and normal neonatal polycythemia.
-5. Boy, 5 years (Page 3, Left):
-• Findings: Hb 132 g/L, RBC 4.1 × 10^12/L, Reticulocytes 1%, Platelets 293 × 10^9/L, WBC 7.7 × 10^9/L, Neutrophils 47% (1% band + 46% segmented) vs. Lymphocytes 46%, ESR 5 mm/h.
-• Conclusion: Normal CBC demonstrating the second physiological leukocyte crossover (neutrophils and lymphocytes equalizing around 45% at 5 years of age).
-6. Girl, 10 years (Page 3, Right):
-• Findings: Hb 88 g/L (low), RBC 3.3 × 10^12/L (low), Hematocrit 32% (low), Color index 0.80 (low), WBC 5.6 × 10^9/L (normal), Platelets 291 × 10^9/L (normal), ESR 14 mm/h (slightly elevated), RBC morphology showing anisocytosis, poikilocytosis, microcytosis, and hypochromia.
-• Conclusion: Moderate hypochromic, microcytic anemia (classic presentation of iron deficiency anemia).
-7. Girl, 1 day (Page 4, Left):
-• Findings: Hb 224 g/L, RBC 6.5 × 10^12/L, Reticulocytes 3%, Color index 1.03, Platelets 325 × 10^9/L, WBC 20.5 × 10^9/L, Neutrophils 65% (1% metamyelocytes, 6% band, 58% segmented), Lymphocytes 30%, ESR 2 mm/h, anisocytosis, macrocytosis, single normoblasts.
-• Conclusion: Normal 1st-day newborn CBC (physiological neonatal erythrocytosis/high hemoglobin, physiological leukocytosis with neutrophilic predominance, and regenerative red cell features).
-8. Boy, 2 years (Page 4, Right):
-• Findings: Severe anemia (Hb 75 g/L, RBC 2.8 × 10^12/L, Reticulocytes 0%), thrombocytopenia (Platelets 64 × 10^9/L), marked hyperleukocytosis (WBC 112.6 × 10^9/L) with 48% myeloblasts, hiatus leukemicus (absence of metamyelocytes and band neutrophils), and elevated ESR (39 mm/h).
-• Conclusion: Acute myeloid leukemia (AML) — evidenced by blast crisis (48% myeloblasts), leukemic gap, pancytopenia of normal lineages (anemia, thrombocytopenia), and accelerated ESR.
-9. Girl, 9 years (Page 5, Left):
-• Findings: Hb 129 g/L (normal), RBC 4.4 × 10^12/L (normal), Platelets 348 × 10^9/L (normal), WBC 5.1 × 10^9/L (low-normal), Segmented neutrophils 26% (neutropenia), Lymphocytes 57% (relative lymphocytosis), Monocytes 15% (monocytosis), ESR 25 mm/h (elevated).
-• Conclusion: Viral infection (or post-viral/atypical infection) — indicated by low-normal WBC, neutropenia with relative lymphocytosis and monocytosis, and elevated ESR.
-10. Boy, 13 years (Page 5, Right):
-• Findings: Hb 127 g/L (normal), RBC 4.2 × 10^12/L (normal), Platelets 321 × 10^9/L (normal), WBC 19.9 × 10^9/L (leukocytosis), Neutrophils 76% (1% metamyelocytes, 9% band, 66% segmented — neutrophilia with a regenerative left shift), Lymphocytes 18% (relative lymphopenia), ESR 29 mm/h (elevated).
-• Conclusion: Acute bacterial infection / purulent inflammatory process — indicated by marked neutrophilic leukocytosis with a left shift and elevated ESR.
