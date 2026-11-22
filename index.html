@@ -1,289 +1,447 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DermaBlaster — Level Select</title>
-<style>
-  :root{
-    --bg:#070b16; --cyan:#38e8ff; --pink:#ff4d9d;
-    --green:#3cff8c; --red:#ff4a5e; --amber:#ffc24d;
-    --panel:rgba(14,28,50,.72);
-    --border:rgba(56,232,255,.22);
-  }
-  *{box-sizing:border-box}
-  html,body{
-    margin:0;min-height:100%;background:var(--bg);
-    font-family:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    color:#e8f3ff;-webkit-font-smoothing:antialiased;
-  }
-  body{
-    background:
-      radial-gradient(circle at 50% -10%, #102a44 0%, transparent 55%),
-      linear-gradient(#070b16,#03060d);
-    min-height:100vh;
-    padding:clamp(18px,4vw,48px);
-    position:relative;
-    overflow-x:hidden;
-  }
-  body::before{
-    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-    background-image:
-      linear-gradient(rgba(56,232,255,.045) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(56,232,255,.045) 1px,transparent 1px);
-    background-size:64px 64px;
-    mask-image:radial-gradient(circle at 50% 30%,#000 0%,transparent 78%);
-  }
-  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto}
-
-  header.hero{text-align:center;padding:24px 0 34px}
-  .kicker{
-    font-size:11px;letter-spacing:.28em;text-transform:uppercase;
-    color:var(--pink);font-weight:800;margin:0 0 14px;
-  }
-  h1{
-    margin:0;font-size:clamp(38px,8vw,74px);font-weight:900;
-    letter-spacing:.04em;line-height:.95;
-  }
-  h1 span{color:var(--cyan);text-shadow:0 0 40px rgba(56,232,255,.65)}
-  .tag{
-    margin:16px auto 0;max-width:640px;
-    color:#9fbdd4;font-size:clamp(14px,2.2vw,16.5px);line-height:1.65;
-  }
-  .tag b{color:#fff}
-  .hero-cta{margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-
-  .btn{
-    display:inline-flex;align-items:center;gap:8px;cursor:pointer;
-    padding:15px 28px;border-radius:13px;font-size:14px;font-weight:900;
-    letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
-    background:#0e2136;color:#cfe9ff;border:1px solid #23506f;
-    transition:transform .15s,background .15s,border-color .15s,box-shadow .15s;
-  }
-  .btn:hover{background:#153350;border-color:var(--cyan);transform:translateY(-2px)}
-  .btn.primary{
-    background:linear-gradient(135deg,#00b7d4,#38e8ff);color:#04121c;border:none;
-    box-shadow:0 0 36px rgba(56,232,255,.45);
-  }
-  .btn.primary:hover{filter:brightness(1.12);box-shadow:0 0 50px rgba(56,232,255,.65)}
-
-  .sec{display:flex;align-items:center;gap:14px;margin:44px 0 20px}
-  .sec h2{
-    margin:0;font-size:13px;letter-spacing:.22em;text-transform:uppercase;
-    color:#7ea1ba;font-weight:900;white-space:nowrap;
-  }
-  .sec .line{flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
-
-  .grid{
-    display:grid;gap:16px;
-    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-  }
-  .card{
-    position:relative;display:flex;flex-direction:column;
-    padding:22px 22px 18px;border-radius:18px;
-    background:linear-gradient(160deg,rgba(14,28,50,.92),rgba(6,12,22,.96));
-    border:1px solid var(--border);
-    text-decoration:none;color:inherit;
-    transition:transform .18s,border-color .18s,box-shadow .18s;
-    overflow:hidden;
-  }
-  .card::before{
-    content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
-    background:linear-gradient(180deg,var(--cyan),transparent);
-    opacity:.7;
-  }
-  .card:hover{
-    transform:translateY(-4px);
-    border-color:rgba(56,232,255,.55);
-    box-shadow:0 18px 44px rgba(0,0,0,.55),0 0 40px rgba(56,232,255,.12);
-  }
-  .card-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:12px}
-  .num{
-    flex:0 0 auto;width:52px;height:52px;border-radius:13px;
-    display:grid;place-items:center;
-    font-size:22px;font-weight:900;color:#04121c;
-    background:linear-gradient(135deg,#00b7d4,#38e8ff);
-    box-shadow:0 0 22px rgba(56,232,255,.35);
-    font-variant-numeric:tabular-nums;
-  }
-  .card h3{
-    margin:0;font-size:17px;font-weight:800;line-height:1.25;color:#fff;
-  }
-  .card .qcount{
-    font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--amber);font-weight:800;margin-top:5px;
-  }
-  .card p{margin:0;color:#8aa9c1;font-size:13px;line-height:1.55;flex:1}
-  .card .play{
-    margin-top:14px;padding-top:13px;border-top:1px solid rgba(56,232,255,.12);
-    display:flex;align-items:center;justify-content:space-between;
-    font-size:11px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--cyan);
-  }
-  .card .play svg{transition:transform .18s}
-  .card:hover .play svg{transform:translateX(4px)}
-
-  .tips{
-    margin-top:44px;padding:22px 26px;border-radius:16px;
-    background:rgba(14,28,50,.55);border:1px solid rgba(56,232,255,.16);
-    display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  }
-  .tip{display:flex;gap:11px;align-items:flex-start}
-  .tip .ico{
-    flex:0 0 auto;width:30px;height:30px;border-radius:9px;
-    display:grid;place-items:center;font-size:15px;
-    background:rgba(56,232,255,.1);border:1px solid rgba(56,232,255,.22);
-  }
-  .tip div b{display:block;font-size:13px;color:#fff;margin-bottom:2px}
-  .tip div span{font-size:12px;color:#7ea1ba;line-height:1.45}
-
-  footer{
-    margin-top:44px;padding-top:22px;
-    border-top:1px solid rgba(56,232,255,.12);
-    display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
-    font-size:11.5px;color:#5d7d94;letter-spacing:.05em;
-  }
-  footer b{color:var(--cyan)}
-
-  @media (max-width:560px){
-    .card{padding:18px 18px 14px}
-    .num{width:44px;height:44px;font-size:18px}
-    .card h3{font-size:15.5px}
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Slide Deck</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #1e1e2f;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .presentation-container {
+            background: #2a2a40;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.8);
+            width: 100%;
+            max-width: 900px;
+            padding: 24px 24px 32px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.2s;
+        }
+        .slide-counter {
+            text-align: center;
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #a9a9d0;
+            margin-bottom: 16px;
+            font-weight: 500;
+            background: #1e1e2f;
+            padding: 6px 12px;
+            border-radius: 60px;
+            display: inline-block;
+            align-self: center;
+            backdrop-filter: blur(4px);
+        }
+        .slide-view {
+            background: #0e0e17;
+            border-radius: 24px;
+            padding: 32px 28px;
+            margin-bottom: 24px;
+            min-height: 380px;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6), 0 6px 14px rgba(0, 0, 0, 0.4);
+            border: 1px solid #3b3b5c;
+            transition: all 0.25s;
+            display: flex;
+            flex-direction: column;
+        }
+        .slide-content {
+            flex: 1;
+            color: #e8e8ff;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            overflow-y: auto;
+            max-height: 460px;
+            padding-right: 6px;
+            scrollbar-width: thin;
+            scrollbar-color: #5d5d8a #1a1a2a;
+        }
+        .slide-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .slide-content::-webkit-scrollbar-track {
+            background: #1a1a2a;
+            border-radius: 10px;
+        }
+        .slide-content::-webkit-scrollbar-thumb {
+            background: #5d5d8a;
+            border-radius: 10px;
+        }
+        /* JSON tree styling */
+        .json-tree {
+            font-family: 'Fira Code', 'Cascadia Code', 'Courier New', monospace;
+            font-size: 0.95rem;
+            background: #13131f;
+            border-radius: 16px;
+            padding: 20px 18px;
+            border: 1px solid #3b3b5c;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #d4d4f0;
+        }
+        .json-key {
+            color: #7aa2f7;
+            font-weight: 500;
+        }
+        .json-string {
+            color: #9ece6a;
+        }
+        .json-number {
+            color: #ff9e64;
+        }
+        .json-boolean {
+            color: #bb9af7;
+        }
+        .json-null {
+            color: #f7768e;
+        }
+        .json-bracket {
+            color: #7dcfff;
+        }
+        .empty-state {
+            color: #6b6b8f;
+            font-style: italic;
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 1.2rem;
+            background: #13131f;
+            border-radius: 16px;
+            border: 1px dashed #4a4a6e;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+        .nav-btn {
+            background: #2f2f4a;
+            border: none;
+            color: #dbdbff;
+            font-size: 1.2rem;
+            padding: 12px 28px;
+            border-radius: 60px;
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.15s, transform 0.1s, box-shadow 0.1s;
+            box-shadow: 0 8px 0 #12121e, 0 6px 14px rgba(0, 0, 0, 0.4);
+            border: 1px solid #5a5a8a;
+            letter-spacing: 0.3px;
+            min-width: 110px;
+        }
+        .nav-btn:hover:not(:disabled) {
+            background: #3d3d62;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 0 #12121e, 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+        .nav-btn:active:not(:disabled) {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 #12121e, 0 6px 14px rgba(0, 0, 0, 0.4);
+        }
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #12121e, 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .slide-indicator {
+            color: #b0b0e0;
+            font-size: 1rem;
+            font-weight: 500;
+            background: #1a1a2a;
+            padding: 8px 20px;
+            border-radius: 60px;
+            border: 1px solid #3e3e62;
+            min-width: 110px;
+            text-align: center;
+        }
+        .status-message {
+            text-align: center;
+            margin-top: 16px;
+            color: #9b9bcb;
+            font-size: 0.9rem;
+            min-height: 1.5em;
+        }
+        .error-message {
+            color: #f7768e;
+            background: #2a1a2a;
+            padding: 12px 18px;
+            border-radius: 16px;
+            border-left: 4px solid #f7768e;
+        }
+        h2 {
+            font-weight: 400;
+            font-size: 1.2rem;
+            margin-bottom: 18px;
+            color: #b4b4e0;
+            border-bottom: 1px solid #35355b;
+            padding-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+        .file-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            margin-bottom: 14px;
+            justify-content: center;
+        }
+        .file-badge {
+            background: #25253e;
+            color: #c0c0f0;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-family: monospace;
+            border: 1px solid #3f3f6b;
+        }
+    </style>
 </head>
 <body>
-<div class="wrap">
-
-  <header class="hero">
-    <p class="kicker">Pediatric Propaedeutics · Quiz Shooter</p>
-    <h1>DERMA<span>BLASTER</span></h1>
-    <p class="tag">
-      Read the question, aim, and <b>shoot the bubble with the correct answer</b> before the timer runs out.
-      Every hit teaches you the fact behind it. Seven levels, <b>101 questions</b> — from infant skin to newborn reflexes.
-    </p>
-    <div class="hero-cta">
-      <a class="btn primary" href="level1.html">▶ Start from Level 1</a>
-      <a class="btn" href="#levels">📚 Choose a Level</a>
+<div class="presentation-container">
+    <div class="slide-counter" id="slideCounter">Slide 1 / 0</div>
+    <div class="slide-view">
+        <div class="slide-content" id="slideContent">
+            <div class="empty-state">📂 Loading JSON files from /levels ...</div>
+        </div>
     </div>
-  </header>
-
-  <div class="sec" id="levels">
-    <h2>Levels</h2><div class="line"></div>
-  </div>
-
-  <div class="grid">
-
-    <a class="card" href="level1.html">
-      <div class="card-top">
-        <div class="num">01</div>
-        <div>
-          <h3>The Skin of Infants</h3>
-          <div class="qcount">7 questions</div>
-        </div>
-      </div>
-      <p>Thickness, melanocytes, water content, pH, loose epidermis, bullae and desquamation.</p>
-      <div class="play"><span>Play level</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
-    </a>
-
-    <a class="card" href="level2.html">
-      <div class="card-top">
-        <div class="num">02</div>
-        <div>
-          <h3>Sebaceous &amp; Sweat Glands</h3>
-          <div class="qcount">9 questions</div>
-        </div>
-      </div>
-      <p>Vernix caseosa, puberty acne, sweat milestones, apocrine glands.</p>
-      <div class="play"><span>Play level</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
-    </a>
-
-    <a class="card" href="level3.html">
-      <div class="card-top">
-        <div class="num">03</div>
-        <div>
-          <h3>Hair &amp; Nails</h3>
-          <div class="qcount">13 questions</div>
-        </div>
-      </div>
-      <p>Lanugo, physiological nail line, alopecia, onychophagia, leukonychia.</p>
-      <div class="play"><span>Play level</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
-    </a>
-
-    <a class="card" href="level4.html">
-      <div class="card-top">
-        <div class="num">04</div>
-        <div>
-          <h3>Primary Lesions</h3>
-          <div class="qcount">18 questions</div>
-        </div>
-      </div>
-      <p>Spots, macules, papules, plaques, vesicles, bullae, wheals and purpura.</p>
-      <div class="play"><span>Play level</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
-    </a>
-
-    <a class="card" href="level5.html">
-      <div class="card-top">
-        <div class="num">05</div>
-        <div>
-          <h3>Secondary Lesions &amp; Skin Signs</h3>
-          <div class="qcount">10 questions</div>
-        </div>
-      </div>
-      <p>Excoriation, lichenification, scales, crusts, fissures, scars, dermographism.</p>
-      <div class="play"><span>Play level</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
-    </a>
-
-    <a class="card" href="level6.html">
-      <div class="card-top">
-        <div class="num">06</div>
-        <div>
-          <h3>Bones, Skull, Spine, Chest &amp; Teeth</h3>
-          <div class="qcount">22 questions</div>
-        </div>
-      </div>
-      <p>Greenstick fractures, fontanelles, spinal curves, chest shape and teeth formulas.</p>
-      <div class="play"><span>Play level</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
-    </a>
-
-    <a class="card" href="level7.html">
-      <div class="card-top">
-        <div class="num">07</div>
-        <div>
-          <h3>Psychomotor Development &amp; Reflexes</h3>
-          <div class="qcount">22 questions</div>
-        </div>
-      </div>
-      <p>Exam algorithm, segmental vs. suprasegmental automatisms, every newborn reflex.</p>
-      <div class="play"><span>Play level</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
-    </a>
-
-  </div>
-
-  <div class="tips">
-    <div class="tip">
-      <div class="ico">🎯</div>
-      <div><b>Shoot to answer</b><span>Aim with the mouse and click — or press Space to fire.</span></div>
+    <div class="controls">
+        <button class="nav-btn" id="prevBtn" disabled>◀ Prev</button>
+        <div class="slide-indicator" id="slideIndicator">1 / 0</div>
+        <button class="nav-btn" id="nextBtn" disabled>Next ▶</button>
     </div>
-    <div class="tip">
-      <div class="ico">📖</div>
-      <div><b>Study notes</b><span>Every level has a "Study Notes" screen with all facts.</span></div>
-    </div>
-    <div class="tip">
-      <div class="ico">🔁</div>
-      <div><b>Fresh each run</b><span>Each run draws 10 random questions from the level's bank.</span></div>
-    </div>
-    <div class="tip">
-      <div class="ico">💡</div>
-      <div><b>Instant feedback</b><span>Correct answer = explanation appears immediately.</span></div>
-    </div>
-  </div>
-
-  <footer>
-    <span>© DermaBlaster · Quiz shooter for pediatric propaedeutics</span>
-    <span>Open <b>level1.html</b> and press start — levels link automatically.</span>
-  </footer>
-
+    <div class="status-message" id="statusMessage"></div>
+    <div class="file-list" id="fileList"></div>
 </div>
+<script>
+    (function() {
+        // --- configuration ---
+        const LEVELS_DIR = 'levels';
+        const MAX_SLIDES = 50;      // safety limit, won't try more than this
+        const FILE_NAMES = [];       // will hold loaded file names
+
+        // --- state ---
+        let slides = [];             // each slide: { name: string, data: any }
+        let currentSlide = 0;        // zero-based index
+        let isLoading = false;
+
+        // --- DOM elements ---
+        const slideContent = document.getElementById('slideContent');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const slideIndicator = document.getElementById('slideIndicator');
+        const slideCounter = document.getElementById('slideCounter');
+        const statusMessage = document.getElementById('statusMessage');
+        const fileListEl = document.getElementById('fileList');
+
+        // --- helper: render a JSON object as a fancy tree (string with spans) ---
+        function renderJsonToHtml(obj, indentLevel = 0) {
+            const indent = '  '.repeat(indentLevel);
+            const nextIndent = '  '.repeat(indentLevel + 1);
+
+            // Handle primitives
+            if (obj === null) return `<span class="json-null">null</span>`;
+            if (typeof obj === 'string') return `<span class="json-string">"${escapeHtml(obj)}"</span>`;
+            if (typeof obj === 'number') return `<span class="json-number">${obj}</span>`;
+            if (typeof obj === 'boolean') return `<span class="json-boolean">${obj}</span>`;
+            if (obj === undefined) return `<span class="json-null">undefined</span>`;
+
+            // Array
+            if (Array.isArray(obj)) {
+                if (obj.length === 0) return `<span class="json-bracket">[]</span>`;
+                let items = obj.map(item => {
+                    return `${nextIndent}${renderJsonToHtml(item, indentLevel + 1)}`;
+                }).join(',\n');
+                return `<span class="json-bracket">[</span>\n${items}\n${indent}<span class="json-bracket">]</span>`;
+            }
+
+            // Object
+            if (typeof obj === 'object') {
+                const keys = Object.keys(obj);
+                if (keys.length === 0) return `<span class="json-bracket">{}</span>`;
+                let entries = keys.map(key => {
+                    const value = obj[key];
+                    return `${nextIndent}<span class="json-key">"${escapeHtml(key)}"</span>: ${renderJsonToHtml(value, indentLevel + 1)}`;
+                }).join(',\n');
+                return `<span class="json-bracket">{</span>\n${entries}\n${indent}<span class="json-bracket">}</span>`;
+            }
+
+            return `<span class="json-null">[unknown]</span>`;
+        }
+
+        // simple escape for HTML
+        function escapeHtml(text) {
+            if (typeof text !== 'string') return text;
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // render slide content based on current index
+        function renderSlide() {
+            if (!slides.length) {
+                slideContent.innerHTML = `<div class="empty-state">📭 No slides loaded. Make sure a <strong>levels</strong> folder exists with 1.json, 2.json, etc.</div>`;
+                updateUI();
+                return;
+            }
+
+            const slide = slides[currentSlide];
+            // Wrap the JSON tree in a container for styling
+            const jsonHtml = renderJsonToHtml(slide.data, 0);
+            slideContent.innerHTML = `<div class="json-tree">${jsonHtml}</div>`;
+            // show file name in status (optional)
+            statusMessage.textContent = `📄 ${slide.name}`;
+            updateUI();
+        }
+
+        // update buttons, indicators, counter
+        function updateUI() {
+            const total = slides.length;
+            if (total === 0) {
+                slideIndicator.textContent = `0 / 0`;
+                slideCounter.textContent = `Slide 0 / 0`;
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+                return;
+            }
+
+            const currentDisplay = currentSlide + 1;
+            slideIndicator.textContent = `${currentDisplay} / ${total}`;
+            slideCounter.textContent = `Slide ${currentDisplay} / ${total}`;
+            prevBtn.disabled = (currentSlide === 0);
+            nextBtn.disabled = (currentSlide === total - 1);
+        }
+
+        // change slide by offset
+        function navigate(delta) {
+            if (!slides.length) return;
+            const newIndex = currentSlide + delta;
+            if (newIndex < 0 || newIndex >= slides.length) return;
+            currentSlide = newIndex;
+            renderSlide();
+        }
+
+        // reset/clear all slides
+        function clearSlides() {
+            slides = [];
+            FILE_NAMES.length = 0;
+            currentSlide = 0;
+        }
+
+        // add a slide (if valid)
+        function addSlide(name, data) {
+            if (data === undefined) return;
+            slides.push({ name, data });
+            FILE_NAMES.push(name);
+        }
+
+        // update file list badges
+        function updateFileBadges() {
+            if (FILE_NAMES.length === 0) {
+                fileListEl.innerHTML = '';
+                return;
+            }
+            fileListEl.innerHTML = FILE_NAMES.map(f => `<span class="file-badge">${escapeHtml(f)}</span>`).join('');
+        }
+
+        // ---- fetch JSON files from levels/1.json, 2.json, ... ----
+        async function loadAllJsonFiles() {
+            if (isLoading) return;
+            isLoading = true;
+            clearSlides();
+            slideContent.innerHTML = `<div class="empty-state">⏳ Loading JSON files from /levels ...</div>`;
+            statusMessage.textContent = 'Fetching files...';
+            updateUI();
+            fileListEl.innerHTML = '';
+
+            let consecutiveFailures = 0;
+            const MAX_CONSECUTIVE_FAILURES = 3; // stop after 3 failures in a row
+
+            // loop from 1 to MAX_SLIDES
+            for (let i = 1; i <= MAX_SLIDES; i++) {
+                const fileName = `${i}.json`;
+                const url = `${LEVELS_DIR}/${fileName}`;
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        // file not found or other HTTP error
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    const data = await response.json();
+                    addSlide(fileName, data);
+                    consecutiveFailures = 0; // reset on success
+                    // update status while loading
+                    statusMessage.textContent = `Loaded ${fileName} (${slides.length} slides)`;
+                } catch (error) {
+                    // silent fail for missing file, but count consecutive failures
+                    consecutiveFailures++;
+                    // if we've had too many failures in a row, stop trying
+                    if (consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
+                        console.warn(`Stopped after ${MAX_CONSECUTIVE_FAILURES} consecutive missing files. Last tried: ${fileName}`);
+                        break;
+                    }
+                    // else continue to next number
+                }
+            }
+
+            // after loop: finalize
+            if (slides.length > 0) {
+                currentSlide = 0;
+                renderSlide();
+                statusMessage.textContent = `✅ Loaded ${slides.length} slide(s)`;
+            } else {
+                // no slides found
+                slideContent.innerHTML = `<div class="empty-state">⚠️ No JSON slides found.<br>Place 1.json, 2.json, ... inside a <strong>levels</strong> folder next to index.html.</div>`;
+                statusMessage.textContent = `No files loaded.`;
+                updateUI();
+            }
+            updateFileBadges();
+            isLoading = false;
+        }
+
+        // ---- event listeners ----
+        prevBtn.addEventListener('click', () => navigate(-1));
+        nextBtn.addEventListener('click', () => navigate(1));
+
+        // keyboard navigation (left/right arrows)
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                navigate(-1);
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                navigate(1);
+            }
+        });
+
+        // ---- start loading when page is ready ----
+        window.addEventListener('load', () => {
+            loadAllJsonFiles();
+        });
+
+        // optional: if user wants to reload (not exposed as button, but could be)
+        // for debugging: window.reloadSlides = loadAllJsonFiles;
+    })();
+</script>
 </body>
 </html>
