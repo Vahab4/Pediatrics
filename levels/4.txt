@@ -63,6 +63,7 @@ Neonatal Herpes Simplex Virus (HSV):
 • Treatment & Exposure Management:
 	• Active Disease: High-dose IV acyclovir 60 mg/kg/day divided every 8 hours for 14 days (skin/eye/mouth disease) or 21 days (CNS or disseminated disease). Add topical ophthalmic trifluridine, iododeoxyuridine, or vidarabine for ocular HSV. Mortality remains high in CNS/disseminated disease despite therapy.
 	• Asymptomatic Exposure: For recurrent maternal HSV, observe closely (very low risk). For primary maternal HSV, obtain viral throat/surface cultures at 24–48 hours of life (empiric acyclovir is controversial unless symptomatic or premature).
+111
 NEONATAL JAUNDICE
 1. BILIRUBIN METABOLISM & CLASSIFICATION
 Bilirubin Metabolism Pathway:
