@@ -1,0 +1,82 @@
+[
+  {
+    "title": "Infant Skin Characteristics",
+    "subtitle": "Skin",
+    "content": "Anatomical and physiological properties of infant skin compared to adults.",
+    "notes": [
+      "Thin and transparent; thickness in children <3 years is 1.5–3 times less than in adults",
+      "Fair/light due to reduced melanocyte function",
+      "Smooth, delicate, and soft, containing up to 80% water",
+      "Loose epidermal structure with cells relatively far apart, making it sensitive, vulnerable, and prone to desquamation",
+      "Weak dermo-epidermal junction (poorly developed anchoring fibers) predisposes to epidermal detachment and bullae formation",
+      "Neutral skin pH results in poor antibacterial protection"
+    ]
+  },
+  {
+    "title": "Skin Appendages: Glands, Hair, and Nails",
+    "subtitle": "Skin",
+    "content": "Developmental milestones and functional characteristics of cutaneous appendages in newborns, children, and adolescents.",
+    "notes": [
+      "Sebaceous glands function in utero to produce vernix caseosa, which protects fetal skin from amniotic fluid and eases passage through the birth canal",
+      "Sebaceous gland activity peaks in puberty, where occlusion by epithelial plugs leads to acne",
+      "Sweat gland function is decreased during the first 3–4 months due to underdeveloped, occluded excretory ducts; sweating starts at 3–4 weeks at higher threshold temperatures and matures by 7–8 years",
+      "Apocrine sweat glands begin functioning in puberty",
+      "Newborns are covered in lanugo (more prominent in premature infants), have poorly developed eyebrows/eyelashes, and replace primary scalp hair within the first 6 months",
+      "Nails reach the fingertips in term infants; a growth delay in the first 3 days creates a 'physiological line' that reaches the free edge by the 3rd month"
+    ]
+  },
+  {
+    "title": "Primary Skin Lesions",
+    "subtitle": "Skin",
+    "content": "Initial pathological changes presenting on previously unaltered skin.",
+    "notes": [
+      "Spots (flat color changes): Inflammatory spots blanch on pressure (roseola ≤ 5 mm, macula 6–20 mm, erythema > 20 mm); non-inflammatory spots do not blanch (nevus, hemangioma, petechiae, purpura 2–5 mm, ecchymosis > 5 mm)",
+      "Elevated solid lesions: Papules (palpable, discrete, < 1 cm), plaques (> 1 cm), nodules (solid or cystic, 1–2 cm), and wheals (irregular, elevated, edematous areas)",
+      "Fluid-filled lesions: Pustules (purulent content), vesicles (< 1 cm, serous/hemorrhagic fluid), and bullae (> 1 cm)",
+      "Pigment and vascular changes: Hyperpigmentation, hypopigmentation, and telangiectasia (dilated superficial blood vessel)"
+    ]
+  },
+  {
+    "title": "Secondary Skin Lesions and Dermographism",
+    "subtitle": "Skin",
+    "content": "Evolved modifications of primary lesions and mechanical skin reactivity.",
+    "notes": [
+      "Surface loss/breaks: Excoriation (linear erosion from scratching), erosion (superficial focal epidermal loss), ulceration (loss extending into dermis), and fissure (deep split into dermis)",
+      "Surface accumulations and thickening: Scale (desiccated keratinized flakes), crust (dried serum, blood, sebum, or pus), lichenification (thickening with exaggerated markings from chronic inflammation), and scar (fibrous tissue replacement)",
+      "Dermographism: 'Writing on the skin' via firm stroking; normally turns white, then red, and is transient"
+    ]
+  },
+  {
+    "title": "Nail and Hair Pathologies",
+    "subtitle": "Skin",
+    "content": "Clinical signs associated with abnormal nail plate and hair growth.",
+    "notes": [
+      "Nail changes: Thimble symptom (pitting), convex/watch-glass nails, koilonychia (spoon nails linked to iron deficiency), leukonychia (white spots/streaks), and onychophagia (nail-biting)",
+      "Hair changes: Alopecia (hair loss) and hypertrichosis (excessive hair growth)"
+    ]
+  },
+  {
+    "title": "Pediatric Skeletal System: General, Skull, Spine, and Chest",
+    "subtitle": "Bones",
+    "content": "Developmental features, fontanelle closure timelines, spinal curves, and thoracic deformities in children.",
+    "notes": [
+      "Children's bones are more elastic with a thick periosteum, predisposing them to rapidly healing 'greenstick' (subperiosteal) fractures",
+      "All newborn bones contain red bone marrow for hematopoiesis (restricted to flat/short bones and long bone epiphyses in adults)",
+      "Skull has fontanelles and sutures allowing molding during birth and brain growth; neurocranium volume greatly exceeds viscerocranium",
+      "Large (anterior) fontanelle (coronal/sagittal intersection, up to 3x3 cm) closes by 1–1.5 years; small (posterior) fontanelle (occipital/parietal) is closed at birth or by 1–2 months",
+      "Newborn spine is arch-shaped; physiological curves develop sequentially: cervical lordosis (2–3 months, lifting head), thoracic kyphosis (sitting), and lumbar lordosis/sacral kyphosis (9–12 months, standing/walking)",
+      "Pediatric chest has horizontal ribs and a greater anteroposterior than transverse diameter; common deformities include pectus excavatum (koilosternia) and pectus carinatum (chicken/keeled breast)"
+    ]
+  },
+  {
+    "title": "Pediatric Dentition",
+    "subtitle": "Bones",
+    "content": "Timelines and calculation formulas for deciduous and permanent tooth eruption.",
+    "notes": [
+      "Primary (milk) tooth eruption begins at 5–7 months (may cause fever, sleep disturbance, diarrhea) and reaches 20 teeth by 2 years",
+      "Formula for expected number of milk teeth: X = n - 4 (where n = age in months)",
+      "Replacement of milk teeth with permanent teeth starts around 5 years",
+      "Formula for expected number of permanent teeth: X = 4n - 20 (where n = age in years)"
+    ]
+  }
+]
