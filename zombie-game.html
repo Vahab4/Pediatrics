@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zombie Knowledge Shooter</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        background: #0a0a12;
+        font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 16px;
+        color: #e0e0ff;
+    }
+    .game-container {
+        background: #14141f;
+        border-radius: 28px;
+        box-shadow: 0 0 60px rgba(0, 200, 100, 0.1), 0 20px 40px rgba(0,0,0,0.8);
+        width: 100%;
+        max-width: 1000px;
+        padding: 24px 28px 28px;
+        border: 1px solid #2a2a4a;
+        display: flex;
+        flex-direction: column;
+    }
+    .hidden { display: none !important; }
+
+    /* ── Loader screen ── */
+    .loader-screen {
+        text-align: center;
+        padding: 40px 20px;
+    }
+    .loader-screen .big-icon {
+        font-size: 84px;
+        filter: drop-shadow(0 0 30px rgba(74,255,138,0.4));
+        margin-bottom: 12px;
+        animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+        0%,100% { transform: translateY(0); }
+        50%     { transform: translateY(-10px); }
+    }
+    .loader-screen h1 {
+        color: #4aff8a;
+        font-size: 1.8rem;
+        margin-bottom: 8px;
+        text-shadow: 0 0 30px rgba(74,255,138,0.5);
+        letter-spacing: 2px;
+    }
+    .loader-screen p {
+        color: #9a9ac0;
+        margin-bottom: 24px;
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+    .load-btn {
+        background: linear-gradient(135deg, #1a3a1a, #2a5a2a);
+        border: 2px solid #4aff8a;
+        color: #4aff8a;
+        padding: 16px 36px;
+        border-radius: 60px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        cursor: pointer;
+        letter-spacing: 1px;
+        transition: all 0.2s;
+        margin: 6px;
+        box-shadow: 0 0 20px rgba(74,255,138,0.2);
+    }
+    .load-btn:hover {
+        background: linear-gradient(135deg, #2a5a2a, #3a7a3a);
+        box-shadow: 0 0 30px rgba(74,255,138,0.4);
+        transform: translateY(-2px);
+    }
+    .load-btn.secondary {
+        background: #1e1e30;
+        border-color: #5a5a9a;
+        color: #c0c0e0;
+        box-shadow: none;
+    }
+    .load-btn.secondary:hover {
+        background: #2a2a4a;
+        border-color: #8a8aff;
+    }
+    .load-options { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+    .drop-zone {
+        border: 2px dashed #3a3a6a;
+        border-radius: 20px;
+        padding: 32px 20px;
+        margin-top: 16px;
+        color: #7a7ab0;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+        border-color: #4aff8a;
+        background: rgba(74,255,138,0.05);
+        color: #a0ffc0;
+    }
+    .drop-zone .drop-hint { font-size: 0.85rem; color: #5a5a8a; margin-top: 6px; }
+    .loader-footer {
+        margin-top: 20px;
+        color: #6a6a9a;
+        font-size: 0.85rem;
+    }
+    .loader-footer button {
+        background: none;
+        border: none;
+        color: #ff8a8a;
+        cursor: pointer;
+        text-decoration: underline;
+        font-size: 0.85rem;
+        margin-left: 4px;
+    }
+    .cache-info {
+        background: #1a2a1a;
+        border: 1px solid #2a4a2a;
+        border-radius: 12px;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+        color: #a0ffb0;
+        font-size: 0.9rem;
+    }
+    .cache-info button {
+        background: #2a4a2a;
+        border: 1px solid #4aff8a;
+        color: #4aff8a;
+        padding: 4px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        margin-left: 8px;
+    }
+
+    /* ── Game header ── */
+    .game-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .game-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #4aff8a;
+        text-shadow: 0 0 20px rgba(74,255,138,0.4);
+        letter-spacing: 1px;
+    }
+    .level-badge {
+        background: #1e1e30;
+        padding: 6px 18px;
+        border-radius: 40px;
+        border: 1px solid #3a3a5a;
+        font-size: 0.9rem;
+        color: #a0a0d0;
+    }
+    .ai-status {
+        font-size: 0.78rem;
+        padding: 4px 12px;
+        border-radius: 20px;
+        border: 1px solid #3a3a5a;
+        color: #8a8ab0;
+    }
+    .ai-status.loading { border-color: #6a5a2a; color: #ffcc66; animation: pulse 1.5s infinite; }
+    .ai-status.ready   { border-color: #2a5a2a; color: #4aff8a; }
+    .ai-status.failed  { border-color: #5a2a2a; color: #ff8a8a; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .stats { display: flex; gap: 20px; font-size: 0.95rem; color: #b0b0e0; }
+
+    /* ── Battlefield ── */
+    .battlefield {
+        background: linear-gradient(180deg, #0d1a0d 0%, #0a0a14 100%);
+        border-radius: 20px;
+        padding: 24px;
+        min-height: 360px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid #1a3a1a;
+        margin-bottom: 20px;
+    }
+    .battlefield::before {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 60px;
+        background: linear-gradient(0deg, #0a1a0a, transparent);
+        pointer-events: none;
+    }
+    .zombie-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 24px;
+        animation: zombieWalk 0.8s ease-out;
+    }
+    @keyframes zombieWalk {
+        0%   { transform: translateY(-30px) scale(0.9); opacity: 0; }
+        60%  { transform: translateY(6px) scale(1.02); opacity: 1; }
+        100% { transform: translateY(0) scale(1); }
+    }
+    .zombie-emoji {
+        font-size: 64px;
+        filter: drop-shadow(0 0 18px rgba(180,255,100,0.5));
+        margin-bottom: 6px;
+        animation: zombieBreathe 2s infinite ease-in-out;
+    }
+    @keyframes zombieBreathe {
+        0%,100% { transform: scale(1); }
+        50%     { transform: scale(1.06); }
+    }
+    .zombie-question {
+        background: #1a2a1a;
+        border: 1px solid #2a5a2a;
+        border-radius: 16px;
+        padding: 18px 24px;
+        max-width: 720px;
+        text-align: center;
+        font-size: 1.05rem;
+        line-height: 1.6;
+        color: #d0ffd0;
+        box-shadow: 0 4px 20px rgba(0,80,0,0.3);
+    }
+    .guns-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+    }
+    .gun-btn {
+        background: #1e2a3a;
+        border: 2px solid #2a4a6a;
+        border-radius: 16px;
+        padding: 16px 20px;
+        color: #c0e0ff;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        cursor: pointer;
+        text-align: left;
+        transition: all 0.15s;
+    }
+    .gun-btn:hover:not(:disabled) {
+        background: #2a3a5a;
+        border-color: #4a8aff;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(74,138,255,0.2);
+    }
+    .gun-btn:disabled { cursor: default; opacity: 0.7; }
+    .gun-btn.correct {
+        background: #1a3a1a;
+        border-color: #4aff8a;
+        box-shadow: 0 0 30px rgba(74,255,138,0.4);
+        animation: correctPulse 0.5s ease-out;
+    }
+    @keyframes correctPulse {
+        0%   { transform: scale(1); }
+        50%  { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    .gun-btn.wrong {
+        background: #3a1a1a;
+        border-color: #ff4a4a;
+        box-shadow: 0 0 30px rgba(255,74,74,0.4);
+        animation: wrongShake 0.4s ease-out;
+    }
+    @keyframes wrongShake {
+        0%,100% { transform: translateX(0); }
+        20%     { transform: translateX(-8px); }
+        40%     { transform: translateX(8px); }
+        60%     { transform: translateX(-5px); }
+        80%     { transform: translateX(5px); }
+    }
+    .gun-icon { font-size: 1.6rem; margin-right: 10px; vertical-align: middle; }
+    .gun-label {
+        font-weight: 600;
+        color: #8ac0ff;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: block;
+        margin-bottom: 4px;
+    }
+    .feedback {
+        text-align: center;
+        font-size: 1.1rem;
+        font-weight: 600;
+        min-height: 2em;
+        margin-bottom: 16px;
+        transition: all 0.3s;
+    }
+    .feedback.hit   { color: #4aff8a; text-shadow: 0 0 20px rgba(74,255,138,0.5); }
+    .feedback.miss  { color: #ff6a6a; text-shadow: 0 0 20px rgba(255,106,106,0.5); }
+    .controls { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .ctrl-btn {
+        background: #1e1e30;
+        border: 1px solid #3a3a5a;
+        color: #c0c0e0;
+        padding: 12px 28px;
+        border-radius: 60px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.15s;
+    }
+    .ctrl-btn:hover:not(:disabled) { background: #2a2a4a; border-color: #5a5a9a; }
+    .ctrl-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .ctrl-btn.primary {
+        background: #1a3a1a;
+        border-color: #4aff8a;
+        color: #4aff8a;
+    }
+    .ctrl-btn.primary:hover:not(:disabled) { background: #2a4a2a; box-shadow: 0 0 20px rgba(74,255,138,0.3); }
+
+    .spinner {
+        width: 48px;
+        height: 48px;
+        border: 4px solid #1e2a1e;
+        border-top-color: #4aff8a;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .level-complete { text-align: center; padding: 40px 20px; }
+    .level-complete h2 {
+        font-size: 2rem;
+        color: #4aff8a;
+        margin-bottom: 12px;
+        text-shadow: 0 0 30px rgba(74,255,138,0.5);
+    }
+    .level-complete p { color: #a0a0d0; font-size: 1.05rem; margin-bottom: 24px; }
+    @media (max-width: 600px) {
+        .game-container { padding: 16px; }
+        .zombie-emoji { font-size: 48px; }
+        .guns-grid { grid-template-columns: 1fr; }
+        .zombie-question { font-size: 0.92rem; padding: 14px; }
+        .loader-screen h1 { font-size: 1.4rem; }
+    }
+</style>
+</head>
+<body>
+<div class="game-container">
+
+    <!-- ══════════ LOADER SCREEN ══════════ -->
+    <div id="loaderScreen" class="loader-screen">
+        <div class="big-icon">🧟</div>
+        <h1>ZOMBIE KNOWLEDGE SHOOTER</h1>
+        <p>Load your <code>levels</code> folder (or select <code>.txt</code> files) to start the game.<br>
+           Everything runs 100% in your browser — no server needed.</p>
+
+        <div id="cacheInfo" class="cache-info hidden">
+            ✅ Loaded <strong id="cacheCount">0</strong> level(s) from your previous session.
+            <button id="clearCacheBtn">Change levels</button>
+        </div>
+
+        <div class="load-options">
+            <button class="load-btn" id="chooseFolderBtn">📁 Choose Levels Folder</button>
+            <button class="load-btn secondary" id="chooseFilesBtn">📄 Choose .txt Files</button>
+        </div>
+
+        <input type="file" id="folderInput" webkitdirectory directory multiple accept=".txt" hidden>
+        <input type="file" id="filesInput" multiple accept=".txt" hidden>
+
+        <div class="drop-zone" id="dropZone">
+            <div style="font-size:2rem;">📂</div>
+            <div>Drag &amp; drop your <strong>levels</strong> folder or <code>.txt</code> files here</div>
+            <div class="drop-hint">(Files will be cached locally so you only do this once)</div>
+        </div>
+
+        <div class="loader-footer">
+            No levels folder? The game still works with no levels shown — but the whole point is your notes. 😉
+        </div>
+    </div>
+
+    <!-- ══════════ GAME SCREEN ══════════ -->
+    <div id="gameScreen" class="hidden">
+        <div class="game-header">
+            <div class="game-title">🧟 ZOMBIE KNOWLEDGE SHOOTER</div>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <div class="level-badge" id="levelBadge">Level 1</div>
+                <div class="ai-status" id="aiStatus">🤖 AI: idle</div>
+            </div>
+            <div class="stats">
+                <span id="scoreDisplay">💀 0 kills</span>
+                <span id="accuracyDisplay">🎯 100%</span>
+            </div>
+        </div>
+
+        <div class="battlefield" id="battlefield">
+            <div id="gameState" class="hidden">
+                <div class="zombie-area">
+                    <div class="zombie-emoji">🧟</div>
+                    <div class="zombie-question" id="questionText"></div>
+                </div>
+                <div class="guns-grid" id="gunsGrid"></div>
+            </div>
+
+            <div id="levelCompleteState" class="hidden level-complete">
+                <h2>✅ LEVEL CLEARED</h2>
+                <p id="levelCompleteMessage"></p>
+                <div class="controls">
+                    <button class="ctrl-btn primary" id="nextLevelBtn">Next Level ▶</button>
+                    <button class="ctrl-btn" id="restartLevelBtn">Restart Level</button>
+                </div>
+            </div>
+
+            <div id="allCompleteState" class="hidden level-complete">
+                <h2>🏆 SURVIVOR</h2>
+                <p id="allCompleteMessage"></p>
+                <button class="ctrl-btn primary" id="playAgainBtn">Play Again</button>
+            </div>
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+
+        <div class="controls">
+            <button class="ctrl-btn" id="skipBtn" disabled>⏭ Skip Zombie</button>
+            <button class="ctrl-btn" id="changeLevelsBtn">📁 Change Levels</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- AI model loader (background — safe if it fails) -->
+<script type="module">
+import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@3.0.0';
+env.allowRemoteModels = true;
+window.__transformersReady = { pipeline };
+</script>
+
+<!-- Main game logic -->
+<script>
+(function () {
+    'use strict';
+
+    // ═══════════════ CONFIG ═══════════════
+    const STORAGE_KEY = 'zombie_knowledge_levels_v1';
+    const MODEL_NAME  = 'Xenova/LaMini-Flan-T5-248M';
+    const QUESTIONS_MIN = 5;
+    const QUESTIONS_MAX = 12;
+
+    // ═══════════════ STATE ═══════════════
+    const State = {
+        levels: [],            // [{ name, text }]
+        currentLevelIdx: 0,
+        questions: [],         // current level's questions
+        questionIdx: 0,
+        kills: 0,
+        attempts: 0,
+        answering: false,
+        generator: null,
+        aiStatus: 'idle',      // idle | loading | ready | failed
+        aiLoading: false,
+    };
+
+    // ═══════════════ DOM ═══════════════
+    const $ = id => document.getElementById(id);
+    const loaderScreen       = $('loaderScreen');
+    const gameScreen         = $('gameScreen');
+    const cacheInfo          = $('cacheInfo');
+    const cacheCount         = $('cacheCount');
+    const chooseFolderBtn    = $('chooseFolderBtn');
+    const chooseFilesBtn     = $('chooseFilesBtn');
+    const folderInput        = $('folderInput');
+    const filesInput         = $('filesInput');
+    const dropZone           = $('dropZone');
+    const clearCacheBtn      = $('clearCacheBtn');
+    const changeLevelsBtn    = $('changeLevelsBtn');
+    const gameState          = $('gameState');
+    const levelCompleteState = $('levelCompleteState');
+    const allCompleteState   = $('allCompleteState');
+    const questionText       = $('questionText');
+    const gunsGrid           = $('gunsGrid');
+    const feedback           = $('feedback');
+    const levelBadge         = $('levelBadge');
+    const aiStatusEl         = $('aiStatus');
+    const scoreDisplay       = $('scoreDisplay');
+    const accuracyDisplay    = $('accuracyDisplay');
+    const skipBtn            = $('skipBtn');
+    const nextLevelBtn       = $('nextLevelBtn');
+    const restartLevelBtn    = $('restartLevelBtn');
+    const playAgainBtn       = $('playAgainBtn');
+    const levelCompleteMessage = $('levelCompleteMessage');
+    const allCompleteMessage   = $('allCompleteMessage');
+
+    // ═══════════════ UTILITIES ═══════════════
+    const escapeHtml = t => {
+        const d = document.createElement('div');
+        d.textContent = t == null ? '' : String(t);
+        return d.innerHTML;
+    };
+    const shuffle = a => {
+        const arr = [...a];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    };
+
+    // ═══════════════ LEVEL LOADING (no fetch, no server) ═══════════════
+    function saveLevels(levels) {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(levels));
+        } catch (e) {
+            console.warn('Could not cache levels:', e);
+        }
+    }
+    function loadCachedLevels() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return null;
+            const levels = JSON.parse(raw);
+            return Array.isArray(levels) && levels.length ? levels : null;
+        } catch {
+            return null;
+        }
+    }
+    function clearCache() {
+        try { localStorage.removeItem(STORAGE_KEY); } catch {}
+    }
+
+    // Read a FileList of .txt files → sorted array of { name, text }
+    async function readTxtFiles(fileList) {
+        const files = Array.from(fileList).filter(f =>
+            f.name.toLowerCase().endsWith('.txt')
+        );
+        if (!files.length) return [];
+
+        // Sort: numeric prefix first (1.txt, 2.txt, ...), then alphabetical
+        files.sort((a, b) => {
+            const na = parseInt((a.name.match(/^(\d+)/) || [])[1], 10);
+            const nb = parseInt((b.name.match(/^(\d+)/) || [])[1], 10);
+            if (!isNaN(na) && !isNaN(nb) && na !== nb) return na - nb;
+            if (!isNaN(na) && isNaN(nb)) return -1;
+            if (isNaN(na) && !isNaN(nb)) return 1;
+            return a.name.localeCompare(b.name);
+        });
+
+        const levels = [];
+        for (const f of files) {
+            try {
+                const text = await f.text();
+                if (text && text.trim()) {
+                    levels.push({ name: f.name, text });
+                }
+            } catch (err) {
+                console.warn('Failed to read', f.name, err);
+            }
+        }
+        return levels;
+    }
+
+    // Recursively traverse drag-and-drop directory entries
+    async function traverseEntry(entry, out) {
+        return new Promise((resolve) => {
+            if (entry.isFile) {
+                entry.file(file => {
+                    if (file.name.toLowerCase().endsWith('.txt')) out.push(file);
+                    resolve();
+                }, () => resolve());
+            } else if (entry.isDirectory) {
+                const reader = entry.createReader();
+                reader.readEntries(async (entries) => {
+                    for (const e of entries) {
+                        await traverseEntry(e, out);
+                    }
+                    resolve();
+                }, () => resolve());
+            } else {
+                resolve();
+            }
+        });
+    }
+
+    async function handleDrop(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.remove('dragover');
+
+        const items = e.dataTransfer.items;
+        if (!items) return;
+
+        const files = [];
+        for (const item of items) {
+            if (item.kind === 'file') {
+                const entry = item.webkitGetAsEntry && item.webkitGetAsEntry();
+                if (entry) {
+                    await traverseEntry(entry, files);
+                } else {
+                    const f = item.getAsFile();
+                    if (f && f.name.toLowerCase().endsWith('.txt')) files.push(f);
+                }
+            }
+        }
+
+        // Convert to a FileList-like array
+        if (files.length) {
+            await acceptLevels(await readTxtFiles(files));
+        }
+    }
+
+    async function acceptLevels(levels) {
+        if (!levels || !levels.length) {
+            alert('No .txt files found. Please make sure you selected a folder containing 1.txt, 2.txt, etc.');
+            return;
+        }
+        State.levels = levels;
+        saveLevels(levels);
+        await startGame();
+    }
+
+    // ═══════════════ AI MODEL (background, optional) ═══════════════
+    function setAIStatus(status, text) {
+        State.aiStatus = status;
+        aiStatusEl.className = 'ai-status ' + status;
+        aiStatusEl.textContent = text || status;
+    }
+
+    async function loadAIInBackground() {
+        if (State.aiLoading || State.aiStatus === 'ready' || State.aiStatus === 'failed') return;
+        State.aiLoading = true;
+
+        // Wait for the dynamic import module to attach pipeline
+        let tries = 0;
+        while (!window.__transformersReady && tries < 100) {
+            await new Promise(r => setTimeout(r, 100));
+            tries++;
+        }
+
+        if (!window.__transformersReady) {
+            setAIStatus('failed', '🤖 AI: unavailable');
+            State.aiLoading = false;
+            return;
+        }
+
+        setAIStatus('loading', '🤖 AI: loading…');
+        try {
+            const { pipeline } = window.__transformersReady;
+            State.generator = await pipeline('text2text-generation', MODEL_NAME);
+            setAIStatus('ready', '🤖 AI: ready');
+        } catch (err) {
+            console.warn('AI model failed to load, using rule-based fallback.', err);
+            setAIStatus('failed', '🤖 AI: fallback');
+            State.generator = null;
+        } finally {
+            State.aiLoading = false;
+        }
+    }
+
+    // ═══════════════ QUESTION GENERATION ═══════════════
+    // Extract topics and facts from medical-note-style text
+    function extractTopics(text) {
+        const lines = text.replace(/\r\n/g, '\n').split('\n');
+        const topics = [];
+        let current = { name: 'General', facts: [] };
+
+        const isHeader = (line) => {
+            const t = line.trim();
+            if (!t) return false;
+            // "Term:" (short, ends with colon, not a bullet)
+            if (/^[A-Z][A-Za-z0-9 ,\-–&/()]{1,60}:$/.test(t)) return true;
+            // "1. SOME SECTION" or "1. Some Section"
+            if (/^\d+\.\s+[A-Z].{2,80}$/.test(t) && t.length < 90) return true;
+            // ALL CAPS HEADER
+            if (/^[A-Z][A-Z0-9 ,\-–&/()'.:!?]+$/.test(t) && t.length > 3 && t.length < 90 && /[A-Z]{3,}/.test(t)) return true;
+            return false;
+        };
+        const cleanHeader = (line) => {
+            return line.trim()
+                .replace(/^\d+\.\s*/, '')
+                .replace(/:$/, '')
+                .replace(/^•\s*/, '')
+                .trim();
+        };
+
+        for (const line of lines) {
+            const t = line.trim();
+            if (!t) continue;
+
+            if (isHeader(t)) {
+                if (current.facts.length) topics.push(current);
+                current = { name: cleanHeader(t), facts: [] };
+                continue;
+            }
+            // Skip very short lines and pure note lines
+            if (/^\(Note:/i.test(t) || t.length < 25) continue;
+
+            // Bullet → single fact
+            if (/^[•◦▪\-]/.test(t) || /^\t+[•◦▪\-]/.test(line)) {
+                const content = t.replace(/^[•◦▪\-]\s*/, '').trim();
+                if (content.length > 30) current.facts.push(content);
+                continue;
+            }
+            // Otherwise: split into sentences and add each as a fact
+            const sentences = t.split(/(?<=[.!?])\s+/);
+            for (const s of sentences) {
+                if (s.length > 40 && s.length < 300) current.facts.push(s.trim());
+            }
+        }
+        if (current.facts.length) topics.push(current);
+        return topics;
+    }
+
+    // Cloze question: blank out a key term in a fact sentence
+    function makeCloze(fact, allFacts) {
+        const words = fact.split(/\s+/);
+        if (words.length < 5) return null;
+
+        // Candidate indices: capitalized words (not first word), numbers
+        const candidates = [];
+        for (let i = 1; i < words.length; i++) {
+            const clean = words[i].replace(/[.,;:()"'`]/g, '');
+            if (clean.length < 4) continue;
+            if (/^[A-Z]/.test(clean) && !/^(The|This|These|Those|An?|And|Or|But|For|Nor|So|Yet|If|When|While|Because|Since|After|Before|During|Within|Without|With|From|Into|Upon|Every|Some|Many|Most|All|Each|Any|No|Not)$/.test(clean)) {
+                candidates.push(i);
+            } else if (/^\d+(\.\d+)?%?$/.test(clean)) {
+                candidates.push(i);
+            }
+        }
+        if (!candidates.length) return null;
+
+        const keyIdx = candidates[Math.floor(Math.random() * candidates.length)];
+        const answer = words[keyIdx].replace(/[.,;:()"'`]/g, '');
+        if (answer.length < 3) return null;
+
+        const questionWords = [...words];
+        questionWords[keyIdx] = '______';
+
+        // Gather distractors from other facts
+        const pool = new Set();
+        for (const f of allFacts) {
+            if (f === fact) continue;
+            for (const w of f.split(/\s+/)) {
+                const c = w.replace(/[.,;:()"'`]/g, '');
+                if (c.length >= 4 && /^[A-Z]/.test(c) && c !== answer && c.length < 40) {
+                    pool.add(c);
+                }
+                if (pool.size > 15) break;
+            }
+            if (pool.size > 15) break;
+        }
+        const distractors = shuffle([...pool]).slice(0, 2);
+        if (distractors.length < 2) return null;
+
+        return {
+            question: `Fill in the blank:\n"${questionWords.join(' ')}"`,
+            correctAnswer: answer,
+            options: shuffle([answer, ...distractors]),
+        };
+    }
+
+    // "Which of these is true about X?" using topic facts as distractors
+    function makeTopicQuestion(topic, allTopics) {
+        if (!topic.facts.length) return null;
+        const fact = topic.facts[Math.floor(Math.random() * topic.facts.length)];
+
+        const otherFacts = [];
+        for (const t of allTopics) {
+            if (t === topic) continue;
+            for (const f of t.facts) {
+                if (f !== fact && f.length < 160) otherFacts.push(f);
+            }
+        }
+        const distractors = shuffle(otherFacts).slice(0, 2);
+        if (distractors.length < 2) return null;
+
+        const shortFact = fact.length > 130 ? fact.slice(0, 130) + '…' : fact;
+        const shortDistractors = distractors.map(d => d.length > 130 ? d.slice(0, 130) + '…' : d);
+
+        return {
+            question: `Which of these is TRUE about "${topic.name}"?`,
+            correctAnswer: shortFact,
+            options: shuffle([shortFact, ...shortDistractors]),
+        };
+    }
+
+    function generateRuleBasedQuestions(text, count) {
+        const topics = extractTopics(text);
+        const allFacts = topics.flatMap(t => t.facts);
+        if (!allFacts.length) return [];
+
+        const questions = [];
+        const seen = new Set();
+
+        // 1) Topic-based questions (highest value)
+        for (const t of shuffle(topics)) {
+            if (questions.length >= count) break;
+            const q = makeTopicQuestion(t, topics);
+            if (q && !seen.has(q.correctAnswer)) {
+                seen.add(q.correctAnswer);
+                questions.push(q);
+            }
+        }
+
+        // 2) Cloze questions from random facts
+        for (const f of shuffle(allFacts)) {
+            if (questions.length >= count) break;
+            const q = makeCloze(f, allFacts);
+            if (q && !seen.has(q.correctAnswer)) {
+                seen.add(q.correctAnswer);
+                questions.push(q);
+            }
+        }
+
+        return questions;
+    }
+
+    // AI-based generation (used only if model loaded successfully)
+    async function generateAIQuestions(text, count) {
+        if (!State.generator) return null;
+
+        const chunks = splitIntoChunks(text, 900);
+        const questions = [];
+        const seen = new Set();
+
+        for (const chunk of chunks) {
+            if (questions.length >= count) break;
+            const prompt =
+`Generate ONE multiple-choice question from this medical text.
+The question must test understanding of a key point from the text.
+Format EXACTLY like this, with three short answers (one correct, two wrong):
+Q: <question>
+A: <correct answer>
+B: <wrong answer>
+C: <wrong answer>
+
+Text: "${chunk}"
+
+Answer:`;
+            try {
+                const out = await State.generator(prompt, {
+                    max_new_tokens: 180,
+                    temperature: 0.7,
+                    do_sample: true,
+                });
+                const parsed = parseAIOutput(out[0].generated_text);
+                if (parsed && !seen.has(parsed.correctAnswer)) {
+                    seen.add(parsed.correctAnswer);
+                    questions.push(parsed);
+                }
+            } catch (err) {
+                console.warn('AI generation error:', err);
+            }
+        }
+
+        // Fill in gaps with rule-based
+        if (questions.length < count) {
+            const fallback = generateRuleBasedQuestions(text, count - questions.length);
+            for (const q of fallback) {
+                if (!seen.has(q.correctAnswer)) {
+                    seen.add(q.correctAnswer);
+                    questions.push(q);
+                }
+            }
+        }
+        return questions.slice(0, count);
+    }
+
+    function splitIntoChunks(text, maxLen) {
+        const paragraphs = text.split(/\n\s*\n/);
+        const chunks = [];
+        let current = '';
+        for (const p of paragraphs) {
+            if ((current + p).length > maxLen && current) {
+                chunks.push(current.trim());
+                current = '';
+            }
+            current += p + '\n';
+        }
+        if (current.trim()) chunks.push(current.trim());
+        return chunks;
+    }
+
+    function parseAIOutput(output) {
+        const lines = output.split('\n').map(l => l.trim());
+        let q = '', a = '', b = '', c = '';
+        for (const line of lines) {
+            if (line.startsWith('Q:')) q = line.slice(2).trim();
+            else if (line.startsWith('A:')) a = line.slice(2).trim();
+            else if (line.startsWith('B:')) b = line.slice(2).trim();
+            else if (line.startsWith('C:')) c = line.slice(2).trim();
+        }
+        if (q && a && b && c && a !== b && a !== c && b !== c) {
+            return { question: q, correctAnswer: a, options: shuffle([a, b, c]) };
+        }
+        return null;
+    }
+
+    // ═══════════════ GAME FLOW ═══════════════
+    async function generateQuestionsForLevel(levelText) {
+        const count = Math.min(
+            QUESTIONS_MAX,
+            Math.max(QUESTIONS_MIN, Math.floor(levelText.length / 900))
+        );
+
+        if (State.aiStatus === 'ready' && State.generator) {
+            const ai = await generateAIQuestions(levelText, count);
+            if (ai && ai.length >= 3) return ai;
+        }
+        return generateRuleBasedQuestions(levelText, count);
+    }
+
+    async function startGame() {
+        loaderScreen.classList.add('hidden');
+        gameScreen.classList.remove('hidden');
+        State.currentLevelIdx = 0;
+        State.kills = 0;
+        State.attempts = 0;
+        updateStats();
+        await beginLevel(0);
+
+        // Kick off AI model load in background if not already attempted
+        if (State.aiStatus === 'idle' || State.aiStatus === 'failed') {
+            loadAIInBackground();
+        }
+    }
+
+    async function beginLevel(idx) {
+        State.currentLevelIdx = idx;
+        State.questionIdx = 0;
+        levelBadge.textContent = `Level ${idx + 1} / ${State.levels.length}`;
+
+        // Show generating state
+        gameState.classList.remove('hidden');
+        levelCompleteState.classList.add('hidden');
+        allCompleteState.classList.add('hidden');
+        questionText.textContent = '⏳ Generating questions for this level…';
+        gunsGrid.innerHTML = '';
+        feedback.textContent = '';
+
+        State.questions = await generateQuestionsForLevel(State.levels[idx].text);
+
+        if (!State.questions.length) {
+            // No questions — skip level
+            if (idx + 1 < State.levels.length) {
+                await beginLevel(idx + 1);
+            } else {
+                showAllComplete();
+            }
+            return;
+        }
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        if (State.questionIdx >= State.questions.length) {
+            showLevelComplete();
+            return;
+        }
+        const q = State.questions[State.questionIdx];
+        questionText.textContent = q.question;
+        feedback.textContent = '';
+        feedback.className = 'feedback';
+        State.answering = false;
+        skipBtn.disabled = false;
+
+        gunsGrid.innerHTML = '';
+        const icons = ['🔫', '🔫', '🔫'];
+        q.options.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'gun-btn';
+            btn.innerHTML = `
+                <span class="gun-label">Gun ${i + 1}</span>
+                <span class="gun-icon">${icons[i] || '🔫'}</span>
+                ${escapeHtml(opt)}
+            `;
+            btn.addEventListener('click', () => handleAnswer(btn, opt, q.correctAnswer));
+            gunsGrid.appendChild(btn);
+        });
+        updateStats();
+    }
+
+    function handleAnswer(btn, chosen, correct) {
+        if (State.answering) return;
+        State.answering = true;
+        State.attempts++;
+
+        const allBtns = gunsGrid.querySelectorAll('.gun-btn');
+        allBtns.forEach(b => b.disabled = true);
+        skipBtn.disabled = true;
+
+        if (chosen === correct) {
+            btn.classList.add('correct');
+            feedback.textContent = '💥 HEADSHOT! Correct!';
+            feedback.className = 'feedback hit';
+            State.kills++;
+            const zombie = document.querySelector('.zombie-emoji');
+            if (zombie) {
+                zombie.style.transition = 'all 0.5s';
+                zombie.style.transform = 'rotate(90deg) scale(0)';
+                zombie.style.opacity = '0';
+            }
+            updateStats();
+            setTimeout(() => {
+                State.questionIdx++;
+                renderQuestion();
+            }, 900);
+        } else {
+            btn.classList.add('wrong');
+            allBtns.forEach(b => {
+                if (b.textContent.includes(correct)) b.classList.add('correct');
+            });
+            feedback.textContent = '💀 MISS! The correct answer is highlighted.';
+            feedback.className = 'feedback miss';
+            updateStats();
+            setTimeout(() => {
+                State.questionIdx++;
+                renderQuestion();
+            }, 1500);
+        }
+    }
+
+    function updateStats() {
+        scoreDisplay.textContent = `💀 ${State.kills} kills`;
+        const acc = State.attempts > 0
+            ? Math.round((State.kills / State.attempts) * 100) : 100;
+        accuracyDisplay.textContent = `🎯 ${acc}%`;
+    }
+
+    function showLevelComplete() {
+        gameState.classList.add('hidden');
+        levelCompleteState.classList.remove('hidden');
+        allCompleteState.classList.add('hidden');
+        levelCompleteMessage.textContent =
+            `You eliminated ${State.questions.length} zombies in Level ${State.currentLevelIdx + 1}!`;
+        nextLevelBtn.textContent = (State.currentLevelIdx + 1 >= State.levels.length)
+            ? '🏆 Finish'
+            : 'Next Level ▶';
+    }
+
+    function showAllComplete() {
+        gameState.classList.add('hidden');
+        levelCompleteState.classList.add('hidden');
+        allCompleteState.classList.remove('hidden');
+        allCompleteMessage.textContent =
+            `You survived all ${State.levels.length} levels with ${State.kills} total kills!`;
+    }
+
+    // ═══════════════ EVENT WIRING ═══════════════
+    chooseFolderBtn.addEventListener('click', () => folderInput.click());
+    chooseFilesBtn.addEventListener('click', () => filesInput.click());
+
+    folderInput.addEventListener('change', async e => {
+        const levels = await readTxtFiles(e.target.files);
+        folderInput.value = '';
+        await acceptLevels(levels);
+    });
+    filesInput.addEventListener('change', async e => {
+        const levels = await readTxtFiles(e.target.files);
+        filesInput.value = '';
+        await acceptLevels(levels);
+    });
+
+    dropZone.addEventListener('click', () => filesInput.click());
+    dropZone.addEventListener('dragover', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', e => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+    });
+    dropZone.addEventListener('drop', handleDrop);
+
+    clearCacheBtn.addEventListener('click', () => {
+        clearCache();
+        cacheInfo.classList.add('hidden');
+        State.levels = [];
+    });
+
+    changeLevelsBtn.addEventListener('click', () => {
+        gameScreen.classList.add('hidden');
+        loaderScreen.classList.remove('hidden');
+        // Refresh cache info display
+        refreshCacheInfo();
+    });
+
+    skipBtn.addEventListener('click', () => {
+        if (State.answering) return;
+        State.questionIdx++;
+        renderQuestion();
+    });
+
+    nextLevelBtn.addEventListener('click', async () => {
+        if (State.currentLevelIdx + 1 >= State.levels.length) {
+            showAllComplete();
+        } else {
+            await beginLevel(State.currentLevelIdx + 1);
+        }
+    });
+
+    restartLevelBtn.addEventListener('click', async () => {
+        await beginLevel(State.currentLevelIdx);
+    });
+
+    playAgainBtn.addEventListener('click', async () => {
+        State.kills = 0;
+        State.attempts = 0;
+        updateStats();
+        await startGame();
+    });
+
+    // ═══════════════ INIT ═══════════════
+    function refreshCacheInfo() {
+        const cached = loadCachedLevels();
+        if (cached && cached.length) {
+            cacheCount.textContent = cached.length;
+            cacheInfo.classList.remove('hidden');
+        } else {
+            cacheInfo.classList.add('hidden');
+        }
+    }
+
+    async function init() {
+        refreshCacheInfo();
+        const cached = loadCachedLevels();
+        if (cached && cached.length) {
+            State.levels = cached;
+            // Auto-start with cached levels
+            await startGame();
+        }
+        // Otherwise: user sees the loader screen and must pick files
+    }
+
+    init();
+})();
+</script>
+</body>
+</html>
