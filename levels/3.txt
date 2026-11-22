@@ -3,31 +3,31 @@ ANATOMO-FUNCTIONAL FEATURES OF THE GASTROINTESTINAL TRACT IN CHILDREN
 Embryogenesis:
 • The digestive system begins forming at 7–8 days of embryogenesis.
 • All parts of the gastrointestinal tract are formed by 4 weeks of gestation.
-• Functional digestive activity begins by 3–4 months of gestation. [1]
+• Functional digestive activity begins by 3–4 months of gestation.
 General Characteristics Across the Pediatric GI Tract:
 • Thin, delicate, dry, and easily injured mucous membrane paired with a richly vascularized submucosal layer.
 • Poorly developed elastic and muscular tissue.
 • Low secretory function of glandular tissue, resulting in low luminal and mucosal digestive activity.
-• Decreased gastrointestinal barrier function and high mucosal permeability, predisposing children to systemic reactions and penetration of microorganisms or toxic-allergic substances into the bloodstream. [1]
+• Decreased gastrointestinal barrier function and high mucosal permeability, predisposing children to systemic reactions and penetration of microorganisms or toxic-allergic substances into the bloodstream.
 2. ORAL CAVITY & ESOPHAGUS
 Oral Cavity:
-• Adapted for sucking: relatively small oral volume, wide and thick tongue, well-developed mouth and cheek muscles, dense buccal fat pads (Bichat's fat pads), roller-like thickenings of the gingival mucosa, and transverse folds on the lip mucosa. [1]
+• Adapted for sucking: relatively small oral volume, wide and thick tongue, well-developed mouth and cheek muscles, dense buccal fat pads (Bichat's fat pads), roller-like thickenings of the gingival mucosa, and transverse folds on the lip mucosa.
 • High larynx position (above the lower-posterior edge of the soft palate) directs liquid to the sides of the larynx, allowing simultaneous breathing and sucking.
-• Salivary glands are underdeveloped at birth (immature ducts and nerve centers), though saliva contains amylolytic enzymes from the first days of life. Intensive "physiological salivation" begins at 3–4 months of age. [1]
-• First incisors erupt at 6–8 months. [1]
-• Common pediatric oral pathologies: oral candidiasis, short frenulum linguae (ankyloglossia), aphthous stomatitis, and painful teething. [1]
+• Salivary glands are underdeveloped at birth (immature ducts and nerve centers), though saliva contains amylolytic enzymes from the first days of life. Intensive "physiological salivation" begins at 3–4 months of age.
+• First incisors erupt at 6–8 months.
+• Common pediatric oral pathologies: oral candidiasis, short frenulum linguae (ankyloglossia), aphthous stomatitis, and painful teething.
 Esophagus:
-• Short and funnel-shaped, with a weak lower esophageal (cardiac) sphincter and well-developed pyloric sphincter. [1]
+• Short and funnel-shaped, with a weak lower esophageal (cardiac) sphincter and well-developed pyloric sphincter.
 • Dimensions by age:
 	• Newborn: length 8–10 cm, width 0.7–0.8 cm
 	• 1 year: length 12 cm, width 1.0 cm
 	• 5 years: length 16 cm
 	• 10 years: length 18 cm, width 1.2–1.5 cm (width 1.5 cm at 12 years)
-	• Adult: length 23–25 cm, width 2.5 cm [1]
+	• Adult: length 23–25 cm, width 2.5 cm 
 • Esophageal pathologies: Barrett's esophagus (metaplasia), esophageal atresia (1 per 3,000–5,000 newborns), and tracheoesophageal fistula (most commonly Type A at 85%). [1]
 3. STOMACH & GASTRIC DIGESTION
 Anatomical Features:
-• Positioned horizontally in infants (lesser curvature facing posteriorly; pylorus near the midsternal line between the navel and xiphoid process), shifting to an oblique/upright position once the child walks (fully oblique by 7–11 years). [1]
+• Positioned horizontally in infants (lesser curvature facing posteriorly; pylorus near the midsternal line between the navel and xiphoid process), shifting to an oblique/upright position once the child walks (fully oblique by 7–11 years). 
 • Stomach Volume (Anatomical / Physiological):
 	• Newborn: 30–35 ml anatomical / 7–10 ml physiological
 	• 4–5 days: 40–50 ml physiological
@@ -35,20 +35,20 @@ Anatomical Features:
 	• 1 year: 250–300 ml
 	• 3 years: 575–680 ml anatomical / 400–600 ml physiological
 	• 8 years: 1,000 ml physiological
-	• 10–12 years: 1,300–1,500 ml [1]
+	• 10–12 years: 1,300–1,500 ml 
 Digestive Physiology & Motility:
 • Underdeveloped chief cells (low pepsin) and parietal cells (low HCl). Total acidity is 2.5–3 times lower than in adults: intragastric pH is neutral (7.0) in newborns, ~3.4 at 1 year, 2.5 at 4–7 years, and 1.5–2.0 in adults.
 • Proteolytic activity is 1/3 lower than in adults, compensated by fetal pepsin (1.5x more active on milk), breast milk proteases, and parietal (contact) digestion. Secretory maturation accelerates with formula feeding.
 • Breast milk fat is hydrolyzed by breast milk, lingual, and gastric lipases; cow's milk fat is poorly hydrolyzed in the stomach, and long-chain fats are hydrolyzed in the intestine.
 • Gastric emptying takes 2–3 hours for breast milk and 3–5 hours for cow's milk.
 • Swallowing air during feeding ("physiological aerophagia") plus an immature cardiac sphincter causes physiological regurgitation (15–30 ml) and flatulence, peaking around 2–4 months and resolving by 12–18 months.
-• Gastric pathologies: pyloric stenosis, nodular gastritis, gastric ulcers, lipoma, and adenomatous polyps. [1]
+• Gastric pathologies: pyloric stenosis, nodular gastritis, gastric ulcers, lipoma, and adenomatous polyps. 
 4. SMALL & LARGE INTESTINES
 General Intestinal Features:
-• Relatively longer than in adults: 6 times body length in infants (340–360 cm total in newborns, with 120–280 cm small intestine) vs. 4 times body length in adults. [1]
-• Long, easily stretchable mesentery predisposes children to volvulus (torsion) and intussusception. [1]
-• Short omentum in children under 5 years prevents localization of peritonitis, leading to diffuse peritonitis. [1]
-• Abundant villi and small lymphatic follicles; small intestinal lymph drains bypassing the liver. [1]
+• Relatively longer than in adults: 6 times body length in infants (340–360 cm total in newborns, with 120–280 cm small intestine) vs. 4 times body length in adults. 
+• Long, easily stretchable mesentery predisposes children to volvulus (torsion) and intussusception. 
+• Short omentum in children under 5 years prevents localization of peritonitis, leading to diffuse peritonitis.
+• Abundant villi and small lymphatic follicles; small intestinal lymph drains bypassing the liver.
 • In early infancy, pinocytosis absorbs intact milk proteins across the permeable mucosa (risking cow's milk protein allergy); after 1 year, proteins undergo complete hydrolysis into amino acids.
 Small & Large Intestine Specifics:
 • Duodenum is mobile until age 7, when periduodenal adipose tissue fixes it.
@@ -56,24 +56,24 @@ Small & Large Intestine Specifics:
 • Large intestine lacks haustra until 6 months, and teniae coli are barely visible in newborns. Transverse colon becomes horizontal by age 2.
 • Cecum and appendix (~5 cm in newborns, 7 cm at 1 year, 9–12 cm in adults) sit high under the liver and are highly mobile, complicating appendicitis diagnosis.
 • Elongated sigmoid colon may form extra loops (dolichosigma), predisposing to primary constipation.
-• Rectum sits above the small pelvis in preschoolers, lacks an ampulla in newborns, and has weak mucosal/submucosal fixation with minimal perirectal fat, predisposing to rectal prolapse during straining or constipation. [1]
+• Rectum sits above the small pelvis in preschoolers, lacks an ampulla in newborns, and has weak mucosal/submucosal fixation with minimal perirectal fat, predisposing to rectal prolapse during straining or constipation.
 Stool & Microbiota:
 • Defecation is reflexive in infants (matching feeding frequency in breastfed babies; ~1x/day in formula-fed; 5x/day in first weeks; 2–3x/day after 6 months) and becomes voluntary by the end of year 1 (1–2x/day formed brown stool).
 • Days 1–2/3: dark olive/greenish-black viscous meconium.
 • Transitional stool transitions by day 5 to golden-yellow, mushy, sour-smelling stool in breastfed infants (white lumps indicate protein overfeeding).
 • Gut flora establishes by days 7–9: Bifidobacterium bifidum predominates in breastfed infants, whereas formula-fed infants have equal proportions of B. bifidum, Lactobacillus acidophilus, enterococci, and normal E. coli.
-• Intestinal pathologies: infant colic, lactase deficiency, celiac disease (villous atrophy), intussusception, rectal prolapse, Hirschsprung's disease, dolichosigma, familial adenomatous polyposis, and IBD (ulcerative colitis, Crohn's disease). [1]
+• Intestinal pathologies: infant colic, lactase deficiency, celiac disease (villous atrophy), intussusception, rectal prolapse, Hirschsprung's disease, dolichosigma, familial adenomatous polyposis, and IBD (ulcerative colitis, Crohn's disease). 
 5. LIVER, GALLBLADDER, PANCREAS & SPLEEN
 Liver:
 • Relatively large: 4–6% of body weight in newborns vs. 2–3% in adults.
 • Poorly differentiated parenchyma (lobular structure emerges by age 1; adult histology reached by age 8) with a thin capsule and rich blood supply, leading to rapid enlargement during infections or circulatory disorders.
-• Low glucuronosyltransferase activity in newborns impairs free bilirubin conjugation, causing physiological transient jaundice. [1]
+• Low glucuronosyltransferase activity in newborns impairs free bilirubin conjugation, causing physiological transient jaundice. 
 Gallbladder & Bile:
 • Spindle-shaped (3 cm) and buried deep in the liver at birth; becomes pear-shaped by 6–7 months and reaches the liver edge by age 2.
-• Pediatric bile is low in bile acids, cholesterol, and salts, but rich in water, mucin, pigments, and urea (in neonates). Taurocholic acid predominates over glycocholic acid, enhancing bactericidal activity and stimulating pancreatic secretion. [1]
+• Pediatric bile is low in bile acids, cholesterol, and salts, but rich in water, mucin, pigments, and urea (in neonates). Taurocholic acid predominates over glycocholic acid, enhancing bactericidal activity and stimulating pancreatic secretion. 
 Pancreas:
 • Small at birth (5–6 cm, tripling by age 10), located deep at T10 (later L1), with a loose fine-fiber capsule (rarely compresses during edema) and wide ducts for good drainage.
-• Rapid growth occurs up to age 3 and during puberty; structural differentiation continues to age 14, while exocrine enzyme secretion reaches adult levels by age 5. [1]
+• Rapid growth occurs up to age 3 and during puberty; structural differentiation continues to age 14, while exocrine enzyme secretion reaches adult levels by age 5. 
 Spleen:
 • Located in the left hypochondrium along the 10th rib (between 9th and 11th ribs); normally palpable only when enlarged 1.5–2 times (splenomegaly).
 6. CLINICAL EXAMINATION & SEMIOTICS OF GI DISORDERS
@@ -87,7 +87,7 @@ Key GI Syndromes & Semiotics:
 • Pain Timing & Location: Preschoolers localize pain to the umbilicus. Early pain (during/right after meals) = fundal gastritis/gastric ulcer; late pain (2–3 hours post-meal) = antral gastritis/duodenal ulcer; sharp pain after any food = pancreatitis.
 • Vomiting: Immediate unchanged food without sour smell = esophageal stricture; vomiting at peak pain with relief = peptic ulcer disease (PUD); indomitable vomiting = pancreatitis, hepatobiliary disease, or surgical abdomen.
 • Stool & Bleeding: Scarce green/mucus/blood stool with tenesmus = dysentery; less than 1 stool per 2 days = constipation; bright red hematemesis = upper GI bleed (PUD, varices); melena = PUD, polyps, tumors; "red currant jelly" stool = intussusception.
-• Diagnostic Workup: Blood/biochemistry (ALT, AST, GGT, bilirubin, ALP, amylase), stool tests (coprogram, calprotectin, zonulin, occult blood, C. difficile, ova/parasites), immunology (tTG-IgA/EMA for celiac; ASCA/ANCA for IBD), H. pylori tests (CLO/urease, breath test, PCR), imaging (ultrasound, barium X-ray, CT/MRI), endoscopy, and pH-metry. [1]
+• Diagnostic Workup: Blood/biochemistry (ALT, AST, GGT, bilirubin, ALP, amylase), stool tests (coprogram, calprotectin, zonulin, occult blood, C. difficile, ova/parasites), immunology (tTG-IgA/EMA for celiac; ASCA/ANCA for IBD), H. pylori tests (CLO/urease, breath test, PCR), imaging (ultrasound, barium X-ray, CT/MRI), endoscopy, and pH-metry.
 ANATOMICAL AND PHYSIOLOGICAL FEATURES OF THE URINARY SYSTEM
 1. KIDNEYS & NEPHRON DEVELOPMENT
 Dimensions, Shape & Topography:
@@ -96,44 +96,44 @@ Dimensions, Shape & Topography:
 • Rounded shape at birth (poles close together), becoming bean-shaped after 1 year. Surface is lobulated (bumpy) in early childhood.
 • Located 1–1.5 vertebrae lower than in adults (below the iliac crest), ascending to adult position by age 7.
 • High renal mobility in young children due to weak fat capsule and fascia; fixation mechanisms mature by ages 5–8 (inspiratory excursion ≤ 1.8% of body length).
-• Medulla is thicker than the cortex at birth; cortical maturation finishes by 3–5 years, and whole-kidney maturation by school age. [1]
+• Medulla is thicker than the cortex at birth; cortical maturation finishes by 3–5 years, and whole-kidney maturation by school age.
 Nephron & Renal Function:
 • Full-term newborns have the adult number of nephrons (~2 million), but glomeruli have smaller diameters, yielding a filtration surface 5 times smaller than in adults.
 • Glomerular visceral epithelium is cuboidal (becomes squamous later), renal blood flow is only 5% of cardiac output, and tubules/loops of Henle are short and narrow.
 • Result: low glomerular filtration rate (GFR), limited tubular reabsorption/secretion, and weak urine concentration.
-• GFR and concentrating ability approach adult levels by age 1, while full homeostatic regulation of water and electrolytes stabilizes by 10–11 years (young children easily develop edema or dehydration under load). [1]
+• GFR and concentrating ability approach adult levels by age 1, while full homeostatic regulation of water and electrolytes stabilizes by 10–11 years (young children easily develop edema or dehydration under load). 
 2. URINARY TRACT & MICTURITION
 Anatomical Features:
 • Walls lack well-developed muscle and elastic fibers.
 • Renal pelvis is wide, hypotonic, and intrarenal up to age 5. Ureters exit at nearly a 90° angle and are long, wide, tortuous, and hypotonic.
 • Short intravesical ureteral segment (lengthens until ages 10–12) and weak muscle around ureteral orifices predispose infants to vesicoureteral reflux (VUR) and UTIs.
 • Bladder sits high (above the pubic symphysis) in infants and descends into the small pelvis with age. Physiological capacity: 35–50 ml (newborn), 100 ml (1 year), 150–200 ml (5–9 years), 300–400 ml (12–14 years).
-• Female urethra is shorter, wider, and closer to the anus (higher UTI risk); infant urethra has a sharper curvature (important for catheterization). [1]
+• Female urethra is shorter, wider, and closer to the anus (higher UTI risk); infant urethra has a sharper curvature (important for catheterization). 
 Diuresis & Urination Frequency:
 • Physiological transient oliguria/anuria occurs in the first 12 hours to 3 days of life due to low fluid intake and extrarenal losses.
 • Daily urine volume formula (under 10 years): V = 600 + 100 × (n - 1) ml, where n = age in years.
 • Urinations per day: 20–25 (newborns after day 3), 15–16 (6–12 months), 7–8 (2–3 years), 5–6 (schoolchildren).
-• Voluntary bladder control emerges by the end of year 1 and stabilizes in year 2 (daytime accidents during excitement can occur up to age 3; nocturnal enuresis up to age 5). [1]
+• Voluntary bladder control emerges by the end of year 1 and stabilizes in year 2 (daytime accidents during excitement can occur up to age 3; nocturnal enuresis up to age 5). 
 3. EXAMINATION, CLINICAL SYNDROMES & LAB DIAGNOSTICS
 Physical Examination:
 • Inspection: Pallor, morning periorbital/facial edema (facies nephritica), generalized anasarca (ascites, hydrothorax, hydropericardium).
 • Palpation & Percussion: Kidneys (usually right) and a full bladder are normally palpable up to age 2; palpability in older children indicates enlargement or displacement. Upper and lower ureteral points assess ureteral tenderness. Pasternatsky's sign (lumbar percussion tenderness) indicates pyelonephritis, paranephritis, or urolithiasis.
-• Auscultation: Systolic murmur over renal arteries indicates renal artery or aortic stenosis. [1]
+• Auscultation: Systolic murmur over renal arteries indicates renal artery or aortic stenosis. 
 Major Clinical Syndromes:
 • Nephrotic Syndrome: Massive edema, heavy proteinuria (>50 mg/kg/day), hypoalbuminemia, and hyperlipidemia.
-• Nephritic Syndrome: Extrarenal signs (edema, arterial hypertension, cardiovascular/CNS changes) + renal signs (oliguria, hematuria, proteinuria, cylindruria). [1]
+• Nephritic Syndrome: Extrarenal signs (edema, arterial hypertension, cardiovascular/CNS changes) + renal signs (oliguria, hematuria, proteinuria, cylindruria). 
 Urinalysis & Functional Renal Tests:
-• Color & Transparency: Normally transparent and straw-yellow. Brick-red diaper stains on days 2–3 reflect physiological uric acid infarction. [1]
-• pH: Acidic in newborns; 6.9–7.8 in breastfed infants vs. 5.4–6.9 in formula-fed infants. [1]
-• Specific Gravity: 1.002–1.030 (≤1.016–1.018 in first weeks). Hyposthenuria = tubular/concentrating defect; hypersthenuria = glucosuria/proteinuria. [1]
-• Proteinuria: Normal ≤ 0.01 g/L (transient physiological proteinuria resolves by days 4–10 in term infants). Classified as renal (glomerular, tubular), extrarenal (prerenal, postrenal), or functional (orthostatic, febrile, alimentary, exertion). [1]
-• Sediment Norms: Erythrocytes 0–2/HPF (≥5 = hematuria; macrohematuria looks like "meat slops"); Leukocytes 0–5/HPF (neutrophilic = bacterial UTI; lymphocytic = glomerulonephritis/interstitial nephritis). [1]
+• Color & Transparency: Normally transparent and straw-yellow. Brick-red diaper stains on days 2–3 reflect physiological uric acid infarction. 
+• pH: Acidic in newborns; 6.9–7.8 in breastfed infants vs. 5.4–6.9 in formula-fed infants. 
+• Specific Gravity: 1.002–1.030 (≤1.016–1.018 in first weeks). Hyposthenuria = tubular/concentrating defect; hypersthenuria = glucosuria/proteinuria. 
+• Proteinuria: Normal ≤ 0.01 g/L (transient physiological proteinuria resolves by days 4–10 in term infants). Classified as renal (glomerular, tubular), extrarenal (prerenal, postrenal), or functional (orthostatic, febrile, alimentary, exertion). 
+• Sediment Norms: Erythrocytes 0–2/HPF (≥5 = hematuria; macrohematuria looks like "meat slops"); Leukocytes 0–5/HPF (neutrophilic = bacterial UTI; lymphocytic = glomerulonephritis/interstitial nephritis). 
 • Quantitative & Bacteriological Tests:
 	• Pathological bacteriuria: >10^5 CFU/ml.
 	• Nechiporenko test (per 1 ml): ≤2,000 leukocytes, ≤1,000 erythrocytes.
 	• Addis-Kakovsky test (24-hr): ≤2,000,000 leukocytes, ≤1,000,000 erythrocytes.
 	• Rehberg test / Schwartz formula: Normal GFR is 30–50 ml/min/1.73 m² in newborns and 90–120 ml/min/1.73 m² after age 1; tubular reabsorption is 97–99%.
-	• Zimnitsky test (8 three-hour portions): Daytime diuresis is 2/3–3/4 of total daily volume; max specific gravity ≥1.018 with fluctuations of at least 0.010–0.015. [1]
+	• Zimnitsky test (8 three-hour portions): Daytime diuresis is 2/3–3/4 of total daily volume; max specific gravity ≥1.018 with fluctuations of at least 0.010–0.015. 
 INTERPRETATION OF THE 10 COMMON BLOOD TEST CASES (CBC)
 Note on Pediatric Leukocyte Crossovers: Normally, neutrophils predominate at birth (~60–65%), equalize with lymphocytes around days 4–5 (1st crossover), lymphocytes predominate (~60%) until ages 4–5 (2nd crossover), and neutrophils predominate thereafter.
 1. Girl, 9 years (Page 1, Left):
